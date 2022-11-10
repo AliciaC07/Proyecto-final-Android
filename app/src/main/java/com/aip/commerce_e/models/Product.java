@@ -1,41 +1,26 @@
 package com.aip.commerce_e.models;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity(tableName = "product_table")
 public class Product  {
 
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "product_id")
     private Integer id;
     private String name;
     private Float price;
     private Category category;
 
-    public Integer getId() {
-        return id;
-    }
+    @ColumnInfo(defaultValue = "true")
+    private Boolean active = true;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
 }
