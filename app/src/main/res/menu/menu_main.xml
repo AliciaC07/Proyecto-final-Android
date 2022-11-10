@@ -2,6 +2,25 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.aip.commerce_e.MainActivity">
+
+    <item android:id="@+id/cart_btn"
+          android:title="@string/cart"
+          app:showAsAction="ifRoom"
+          android:orderInCategory="300"
+          android:icon="@mipmap/cart_icon_round"/><!--android:icon=""-->
+
+    <item android:id="@+id/notifications"
+          android:title="@string/notifications"
+          app:showAsAction="ifRoom"
+          android:orderInCategory="300"
+          android:icon="@mipmap/notification_icon_round"/>
+
+    <item android:id="@+id/search"
+          android:title="@string/search"
+          app:showAsAction="ifRoom"
+          android:orderInCategory="300"
+          android:icon="@mipmap/search_icon_round"/>
+
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"
           android:orderInCategory="100"
