@@ -25,4 +25,6 @@
                 android:id="@+id/action_SecondFragment_to_FirstFragment"
                 app:destination="@id/FirstFragment"/>
     </fragment>
+    <fragment android:id="@+id/registerUserFragment" android:name="com.aip.commerce_e.RegisterUserFragment"
+              android:label="@string/register_user_fragment_label" tools:layout="@layout/fragment_register_user"/>
 </navigation>
