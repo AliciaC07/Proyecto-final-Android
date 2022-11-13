@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 import com.aip.commerce_e.models.Product;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface ProductDao {
 
     @Insert
     void insert(Product product);
+    @Update
+    void update(Product product);
 
     @Query("DELETE FROM product_table")
     void deleteAll();

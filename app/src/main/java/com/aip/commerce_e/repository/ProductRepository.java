@@ -25,6 +25,10 @@ public class ProductRepository {
         AppDatabase.databaseWriteExecutor.execute(() ->
                 productDao.insert(product));
     }
+    public void update(Product product) {
+        AppDatabase.databaseWriteExecutor.execute(() ->
+                productDao.update(product));
+    }
 
     public void deleteAll() {
         AppDatabase.databaseWriteExecutor.execute(() ->

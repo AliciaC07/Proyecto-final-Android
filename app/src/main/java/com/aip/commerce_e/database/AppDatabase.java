@@ -6,11 +6,12 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import com.aip.commerce_e.models.Category;
 import com.aip.commerce_e.models.Product;
+import com.aip.commerce_e.models.User;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Product.class, Category.class}, version = 1, exportSchema = false)
+@Database(entities = {Product.class, Category.class, User.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static String NAME = "commerce";
     private static volatile AppDatabase INSTANCE;
@@ -31,4 +32,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ProductDao productDao();
     public abstract CategoryDao categoryDao();
+    public abstract UserDao userDao();
 }

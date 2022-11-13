@@ -4,13 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+import java.io.Serializable;
+
 @Setter
+@Getter
 @Entity(tableName = "product_table")
-public class Product  {
+public class Product implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -18,7 +21,8 @@ public class Product  {
     private Integer id;
     private String name;
     private Float price;
-    private Category category;
+
+    private Integer categoryId;
 
     @ColumnInfo(defaultValue = "true")
     private Boolean active = true;

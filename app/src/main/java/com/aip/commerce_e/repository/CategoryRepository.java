@@ -27,6 +27,10 @@ public class CategoryRepository {
         AppDatabase.databaseWriteExecutor.execute(() ->
                 categoryDao.insert(category));
     }
+    public void update(Category category) {
+        AppDatabase.databaseWriteExecutor.execute(() ->
+                categoryDao.update(category));
+    }
 
     public void deleteAll() {
         AppDatabase.databaseWriteExecutor.execute(() ->
