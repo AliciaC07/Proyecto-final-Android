@@ -17,7 +17,10 @@ public class User {
     @ColumnInfo(name = "user_id")
     private Integer id;
     private String email;
-    private String password;
+    private String name;
+    private String lastName;
+//    private String password;
+    private String uIdFirebase;
     private String role;
     private String imageUrl;
     private Boolean active = true;
