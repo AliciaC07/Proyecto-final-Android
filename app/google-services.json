@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "218996703067",
+    "project_id": "e-commerce-temas-especiales",
+    "storage_bucket": "e-commerce-temas-especiales.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218996703067:android:b2f577f8115b768761247e",
+        "android_client_info": {
+          "package_name": "com.aip.commerce_e"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218996703067-vkk7bpuvjgbj1pigu3pad99fjr57ilhh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aip.commerce_e",
+            "certificate_hash": "ee8fd2b00792a55a4ad69a285b7b7792f2fad977"
+          }
+        },
+        {
+          "client_id": "218996703067-4d0foneo5ep4hu035vc4eof9jlq03jbb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-GkexUwz7N8_0wG05wsjnKzE6CwN5nZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218996703067-4d0foneo5ep4hu035vc4eof9jlq03jbb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
