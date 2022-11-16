@@ -55,7 +55,7 @@ public class FirstFragment extends Fragment {
                                 editor.putString("email", user.getEmail());
                                 editor.apply();
                                 NavHostFragment.findNavController(FirstFragment.this)
-                                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                                        .navigate(R.id.homeFragment3);
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w("TAG", "signInWithEmail:failure", task.getException());
