@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.aip.commerce_e.R;
+import com.aip.commerce_e.RecyclerViewInterface;
+import com.aip.commerce_e.models.CategoryViewModel;
 
-public class CategoryFragment extends Fragment {
+public class CategoryFragment extends Fragment implements RecyclerViewInterface {
 
     private CategoryViewModel mViewModel;
 
@@ -31,4 +33,8 @@ public class CategoryFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+    @Override
+    public void editOnClick(int pos) {
+
+    }
 }
