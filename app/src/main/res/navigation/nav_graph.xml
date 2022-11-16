@@ -27,4 +27,12 @@
     </fragment>
     <fragment android:id="@+id/registerUserFragment" android:name="com.aip.commerce_e.RegisterUserFragment"
               android:label="@string/register_user_fragment_label" tools:layout="@layout/fragment_register_user"/>
+    <fragment android:id="@+id/categoryFragment"
+              android:name="com.aip.commerce_e.drawerFragments.category.CategoryFragment"
+              android:label="fragment_category" tools:layout="@layout/fragment_category"/>
+    <fragment android:id="@+id/productFragment"
+              android:name="com.aip.commerce_e.drawerFragments.product.ProductFragment" android:label="fragment_product"
+              tools:layout="@layout/fragment_product"/>
+    <fragment android:id="@+id/homeFragment3" android:name="com.aip.commerce_e.drawerFragments.home.HomeFragment"
+              android:label="fragment_home" tools:layout="@layout/fragment_home"/>
 </navigation>
