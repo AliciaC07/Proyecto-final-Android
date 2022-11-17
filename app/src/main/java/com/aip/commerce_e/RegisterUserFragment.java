@@ -236,22 +236,18 @@ public class RegisterUserFragment extends Fragment {
         return true;
     }
     public void clear(){
-        NavHostFragment.findNavController(RegisterUserFragment.this)
-                .navigate(R.id.nav_home);
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
+        /*NavHostFragment.findNavController(RegisterUserFragment.this)
+                .navigate(R.id.homeFragment);*/
     }
     private void uploadFile(String uuid) {
         Log.i("Here", "Bobo");
         if (imageUri != null) {
-
             // Defining the child of storageReference
-            ref
-                    = storageReference
-                    .child(
-                            "users/"
-                                    + UUID.randomUUID().toString());
+            ref = storageReference.child("users/" + UUID.randomUUID().toString());
 
-            UploadTask = ref.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> {
+            UploadTask = ref.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
                         Handler handler = new Handler();
                         handler.postDelayed(() -> binding.progressBar2.setProgress(0), 500);
                         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {

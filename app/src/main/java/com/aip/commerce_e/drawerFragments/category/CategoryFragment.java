@@ -1,7 +1,9 @@
 package com.aip.commerce_e.drawerFragments.category;
 
 import android.annotation.SuppressLint;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -32,7 +34,7 @@ public class CategoryFragment extends Fragment implements RecyclerViewInterface 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentCategoryBinding.inflate(inflater,container,false);
-        ImageView imgV = getParentFragment().getActivity().findViewById(R.id.userImg);
+
         return binding.getRoot();
     }
 

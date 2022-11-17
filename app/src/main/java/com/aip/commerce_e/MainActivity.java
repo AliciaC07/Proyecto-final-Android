@@ -1,6 +1,8 @@
 package com.aip.commerce_e;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -10,8 +12,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import com.aip.commerce_e.models.User;
@@ -56,14 +61,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
-        drawerToggle = new ActionBarDrawerToggle(this,binding.drawerLayout,R.string.open, R.string.close);
-        binding.drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        DrawerLayout drawer = binding.drawerLayout;
+        NavigationView navigationView = binding.navView;
+        appBarConfiguration = new AppBarConfiguration.Builder(R.id.homeFragment3,R.id.categoryFragment,R.id.productFragment)
+                .setOpenableLayout(drawer).build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+//        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         binding.navView.setNavigationItemSelectedListener(item -> {
@@ -79,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.nav_logout:
                     FirebaseAuth.getInstance().signOut();
-                    navController.navigate(R.id.FirstFragment);
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
                     break;
             }
             if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
@@ -93,6 +102,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+//    @Override
+//    protected void onPostCreate(Bundle savedInstanceState) {
+//        super.onPostCreate(savedInstanceState);
+//        // Sync the toggle state after onRestoreInstanceState has occurred.
+//        drawerToggle.syncState();
+//    }
+//
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//        drawerToggle.onConfigurationChanged(newConfig);
+//    }
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,9 +131,6 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if(drawerToggle.onOptionsItemSelected(item)){
-            return true;
-        }
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
