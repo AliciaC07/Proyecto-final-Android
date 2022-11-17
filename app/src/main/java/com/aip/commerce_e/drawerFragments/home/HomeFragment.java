@@ -59,17 +59,13 @@ public class HomeFragment extends Fragment {
 
         Log.i("email de la crt", email);
         //userLogged = findUserLogged(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-//        try {
-//            userLogged = userViewModel.findUserByEmail(email);
-//        } catch (ExecutionException | InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            userLogged = userViewModel.findUserByEmail(email);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-//        ImageView imageView = headerView.findViewById(R.id.userImg);
-//        Picasso.get().load(userLogged.getImageUrl())
-//                .into(imageView);
-//        TextView textView = headerView.findViewById(R.id.username);
-//        textView.setText(userLogged.getName());
+
 
 
         return binding.getRoot();
