@@ -21,11 +21,17 @@ public interface UserDao {
 
     @Query("UPDATE user_table SET active = :status WHERE user_id = :id ")
     void deleteById(Boolean status, Integer id);
-
+    @Query(
+            "SELECT * FROM user_table WHERE email = :email"
+    )
+    User findByEmail(String email);
 
     @Query("SELECT * from user_table ORDER BY email ASC")
     LiveData<List<User>> getAllUsers();
 
     @Query("SELECT * from user_table WHERE active = 'true' ORDER BY email ASC")
     LiveData<List<User>> getAllUserActive();
+    @Query("SELECT * from user_table ORDER BY email ASC")
+    List<User> getAllUsersList();
+
 }

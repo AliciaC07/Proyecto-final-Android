@@ -14,6 +14,10 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -120,9 +124,11 @@ public class RegisterUserFragment extends Fragment {
             //registering popup with OnMenuItemClickListener
             popup.setOnMenuItemClickListener(item -> {
                 if (item.getTitle().equals("Choose From Gallery")){
-                    imageChooser();
+                    imageChooser("Gallery");
                 } else if (item.getTitle().equals("Choose From Camera")) {
                     takeImage();
+                } else if (item.getTitle().equals("Choose From Storage")) {
+                    imageChooser("image/*");
                 }
                 return true;
             });
@@ -164,42 +170,42 @@ public class RegisterUserFragment extends Fragment {
         user.setName(binding.userNametxt.getText().toString());
         user.setLastName(binding.lastNametxt.getText().toString());
         user.setEmail(binding.emailtxt.getText().toString());
-        user.setRole(USER);
+        Log.i("Role", binding.spnRoles.getSelectedItem().toString());
+        user.setRole(binding.spnRoles.getSelectedItem().toString());
         user.setImageUrl(url);
         user.setUIdFirebase(uuid);
+        userViewModel.insert(user);
         clear();
 
     }
-    void imageChooser() {
+    void imageChooser(String type) {
 
         // create an instance of the
         // intent of the type image
 
-            if (ActivityCompat.checkSelfPermission(binding.getRoot().getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE);
-                selectedImage = true;
-            }else {
-                Intent i = new Intent();
-                i.setType("image/*");
-                i.setAction(Intent.ACTION_GET_CONTENT);
+        if (type.equals("image/*")){
 
-                // pass the constant to compare it
-                // with the returned requestCode
-                startActivityForResult(Intent.createChooser(i, "Select Picture"), STORAGE);
-                selectedImage = true;
-            }
+            Intent i = new Intent();
+            i.setType(type);
+            i.setAction(Intent.ACTION_GET_CONTENT);
+            activityResultLauncher.launch(i);
+            selectedImage = true;
+
+        }else {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            activityResultLauncher.launch(intent);
+            selectedImage = true;
+        }
         }
     void takeImage(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (binding.getRoot().getContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                selectedImage = true;
-            }else {
-                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Start the activity with camera_intent, and request pic id
-                startActivityForResult(camera_intent, PICTURE_ID);
-                selectedImage = true;
-            }
+        if (binding.getRoot().getContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+            selectedImage = true;
+        }else {
+            Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Start the activity with camera_intent, and request pic id
+            activityResultLauncherCamera.launch(camera_intent);
+            selectedImage = true;
         }
 
     }
@@ -231,7 +237,7 @@ public class RegisterUserFragment extends Fragment {
     }
     public void clear(){
         NavHostFragment.findNavController(RegisterUserFragment.this)
-                .navigate(R.id.SecondFragment);
+                .navigate(R.id.nav_home);
     }
     private void uploadFile(String uuid) {
         Log.i("Here", "Bobo");
@@ -254,7 +260,7 @@ public class RegisterUserFragment extends Fragment {
                                 insertUser(uri.toString(), uuid);
                             }
                         });
-                        Toast.makeText(binding.getRoot().getContext(), "Upload successful", Toast.LENGTH_LONG).show();
+                        ///Toast.makeText(binding.getRoot().getContext(), "Upload successful", Toast.LENGTH_LONG).show();
                     })
                     .addOnFailureListener(e -> Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show())
                     .addOnProgressListener(taskSnapshot -> {
@@ -265,69 +271,41 @@ public class RegisterUserFragment extends Fragment {
             Toast.makeText(binding.getRoot().getContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_PERMISSION_CODE)
-        {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                Toast.makeText(binding.getRoot().getContext(), "camera permission granted", Toast.LENGTH_LONG).show();
-                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Start the activity with camera_intent, and request pic id
-                startActivityForResult(camera_intent, PICTURE_ID);
-                selectedImage = true;
-            }
-            else
-            {
-                Toast.makeText(binding.getRoot().getContext(), "camera permission denied", Toast.LENGTH_LONG).show();
-            }
-        }
-        if (requestCode == STORAGE)
-        {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                Toast.makeText(binding.getRoot().getContext(), "storage permission granted", Toast.LENGTH_LONG).show();
-                Intent i = new Intent();
-                i.setType("image/*");
-                i.setAction(Intent.ACTION_GET_CONTENT);
+    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK){
 
-                // pass the constant to compare it
-                // with the returned requestCode
-                startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
-                selectedImage = true;
-            }
-            else
-            {
-                Toast.makeText(binding.getRoot().getContext(), "camera permission denied", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+                        // Get the url of the image from data
+                        //Uri selectedImageUri = result.getData().getData();
+                        imageUri = result.getData().getData();
+                        if (null != imageUri) {
+                            // update the preview image in the layout
+                            binding.imageView2.setImageURI(imageUri);
 
-        if (resultCode == RESULT_OK) {
-
-            // compare the resultCode with the
-            // SELECT_PICTURE constant
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url of the image from data
-                Uri selectedImageUri = data.getData();
-                imageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // update the preview image in the layout
-                    binding.imageView2.setImageURI(selectedImageUri);
+                        }
+                    }
                 }
             }
-            if (requestCode == PICTURE_ID) {
-                // BitMap is data structure of image file which store the image in memory
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                imageUri = getImageUri(binding.getRoot().getContext(), photo);
-                // Set the image in imageview for display
-                binding.imageView2.setImageBitmap(photo);
+
+
+    );
+    private ActivityResultLauncher<Intent> activityResultLauncherCamera = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK){
+
+                        Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
+                        imageUri = getImageUri(binding.getRoot().getContext(), photo);
+                        // Set the image in imageview for display
+                        binding.imageView2.setImageBitmap(photo);
+                    }
+                }
             }
-        }
-    }
+
+
+    );
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);

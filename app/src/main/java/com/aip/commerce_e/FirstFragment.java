@@ -12,8 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import com.aip.commerce_e.databinding.FragmentFirstBinding;
+import com.aip.commerce_e.models.User;
+import com.aip.commerce_e.models.UserViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,6 +27,7 @@ public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private FirebaseAuth mAuth;
+    private UserViewModel userViewModel;
 
     @Override
     public View onCreateView(
@@ -33,6 +37,7 @@ public class FirstFragment extends Fragment {
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         mAuth = FirebaseAuth.getInstance();
+//        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         return binding.getRoot();
 
     }
@@ -77,8 +82,11 @@ public class FirstFragment extends Fragment {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
+//            User userLogged = userViewModel.findUserByEmail(currentUser.getEmail());
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("user", userLogged);
             NavHostFragment.findNavController(FirstFragment.this)
-                    .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                    .navigate(R.id.homeFragment3);
         }
     }
 

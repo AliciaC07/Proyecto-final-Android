@@ -2,13 +2,20 @@ package com.aip.commerce_e;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Gravity;
+import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+import com.aip.commerce_e.models.User;
+import com.aip.commerce_e.models.UserViewModel;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,15 +29,21 @@ import com.aip.commerce_e.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     public ActionBarDrawerToggle drawerToggle;
+    private UserViewModel userViewModel;
+    private  String email = "12345@gmail.com";
+    private User userLogged;
 
     @SuppressLint({"ResourceType", "NonConstantResourceId"})
     @Override
@@ -49,17 +62,29 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        try {
+            userLogged = userViewModel.findUserByEmail(email);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", userLogged);
         binding.navView.setNavigationItemSelectedListener(item -> {
             switch(item.getItemId()){
                 case R.id.nav_home:
-                    navController.navigate(R.id.homeFragment3);
+                    navController.navigate(R.id.homeFragment3, bundle);
                     break;
                 case R.id.nav_category:
                     navController.navigate(R.id.categoryFragment);
                     break;
                 case R.id.nav_product:
                     navController.navigate(R.id.productFragment);
+                    break;
+                case R.id.nav_logout:
+                    FirebaseAuth.getInstance().signOut();
+                    navController.navigate(R.id.FirstFragment);
                     break;
             }
             if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
@@ -68,6 +93,19 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return false;
         });
+        NavigationView navigationView = binding.navView;
+        View headerView = navigationView.getHeaderView(0);
+        ImageView imageView = headerView.findViewById(R.id.userImg);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser != null || userLogged != null){
+            Picasso.get().load(userLogged.getImageUrl())
+                    .into(imageView);
+            TextView name = headerView.findViewById(R.id.username);
+            TextView email = headerView.findViewById(R.id.emailview);
+            name.setText(userLogged.getName());
+            email.setText(userLogged.getEmail());
+        }
+
 
     }
 
