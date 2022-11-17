@@ -7,10 +7,12 @@ import androidx.room.PrimaryKey;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @Entity(tableName = "user_table")
-public class User {
+public class User implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
