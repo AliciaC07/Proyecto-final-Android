@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import com.aip.commerce_e.repository.CategoryRepository;
-import com.aip.commerce_e.repository.ProductRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -35,6 +34,7 @@ public class CategoryViewModel extends AndroidViewModel {
     public LiveData<List<Category>> findAll() {
         return allCategory;
     }
+    public LiveData<List<Category>> findAllActive(Boolean status){ return categoryRepository.findAllActive(status); }
 
     public void deleteById(Integer id){
         categoryRepository.deleteById(id);

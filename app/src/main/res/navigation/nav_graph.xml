@@ -19,4 +19,7 @@
               tools:layout="@layout/fragment_product"/>
     <fragment android:id="@+id/homeFragment3" android:name="com.aip.commerce_e.drawerFragments.home.HomeFragment"
               android:label="@string/home_fragment_label" tools:layout="@layout/fragment_home"/>
+    <fragment android:id="@+id/createCategoryFragment"
+              android:name="com.aip.commerce_e.drawerFragments.category.actions.CreateCategoryFragment"
+              android:label="fragment_create_category" tools:layout="@layout/fragment_create_category"/>
 </navigation>

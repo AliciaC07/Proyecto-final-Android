@@ -29,6 +29,6 @@ public interface CategoryDao {
     @Query("SELECT * from category_table ORDER BY name ASC")
     LiveData<List<Category>> getAllCategory();
 
-    @Query("SELECT * from category_table WHERE active = 'true' ORDER BY name ASC")
-    LiveData<List<Category>> getAllActiveCategory();
+    @Query("SELECT * from category_table WHERE active = :status ORDER BY name ASC")
+    LiveData<List<Category>> getAllActiveCategory(Boolean status);
 }

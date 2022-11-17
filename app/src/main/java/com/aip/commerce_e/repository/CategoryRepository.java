@@ -20,7 +20,7 @@ public class CategoryRepository {
         AppDatabase db = AppDatabase.getInstance(application);
         categoryDao = db.categoryDao();
         mAllCategory = categoryDao.getAllCategory();
-        activeAllCategory = categoryDao.getAllActiveCategory();
+        //activeAllCategory = categoryDao.getAllActiveCategory();
     }
 
     public void insert(Category category) {
@@ -40,8 +40,8 @@ public class CategoryRepository {
     public LiveData<List<Category>> findAll() {
         return mAllCategory;
     }
-    public LiveData<List<Category>> findAllActive() {
-        return activeAllCategory;
+    public LiveData<List<Category>> findAllActive(Boolean status) {
+        return categoryDao.getAllActiveCategory(status);
     }
 
     public void deleteById(Integer id){

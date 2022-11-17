@@ -53,6 +53,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 //        Bundle re = getArguments();
 //        userLogged = (User) re.get("user");
