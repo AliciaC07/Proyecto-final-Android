@@ -11,4 +11,5 @@
           android:title="@string/gallery"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+    <item android:title="@string/storage"/>
 </menu>
