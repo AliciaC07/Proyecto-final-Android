@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private  String email = "12345@gmail.com";
     private User userLogged;
+    private FirebaseAuth mAuth;
 
     @SuppressLint({"ResourceType", "NonConstantResourceId"})
     @Override
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        mAuth = FirebaseAuth.getInstance();
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
@@ -63,18 +65,11 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        try {
-            userLogged = userViewModel.findUserByEmail(email);
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", userLogged);
+
         binding.navView.setNavigationItemSelectedListener(item -> {
             switch(item.getItemId()){
                 case R.id.nav_home:
-                    navController.navigate(R.id.homeFragment3, bundle);
+                    navController.navigate(R.id.homeFragment3);
                     break;
                 case R.id.nav_category:
                     navController.navigate(R.id.categoryFragment);
@@ -93,18 +88,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return false;
         });
-        NavigationView navigationView = binding.navView;
-        View headerView = navigationView.getHeaderView(0);
-        ImageView imageView = headerView.findViewById(R.id.userImg);
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser != null || userLogged != null){
-            Picasso.get().load(userLogged.getImageUrl())
-                    .into(imageView);
-            TextView name = headerView.findViewById(R.id.username);
-            TextView email = headerView.findViewById(R.id.emailview);
-            name.setText(userLogged.getName());
-            email.setText(userLogged.getEmail());
-        }
+
+
 
 
     }
