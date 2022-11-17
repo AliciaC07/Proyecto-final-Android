@@ -2,6 +2,7 @@ package com.aip.commerce_e;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,8 +60,8 @@ public class FirstFragment extends Fragment {
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("email", user.getEmail());
                                 editor.apply();
-                                NavHostFragment.findNavController(FirstFragment.this)
-                                        .navigate(R.id.homeFragment3);
+                                Intent intent = new Intent(getContext(), MainActivity.class);
+                                startActivity(intent);
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w("TAG", "signInWithEmail:failure", task.getException());
@@ -73,7 +74,7 @@ public class FirstFragment extends Fragment {
         });
         binding.btnRegister.setOnClickListener(view1 -> {
             NavHostFragment.findNavController(FirstFragment.this)
-                    .navigate(R.id.registerUserFragment);
+                    .navigate(R.id.registerUserFragment2);
         });
     }
     @Override
@@ -85,8 +86,10 @@ public class FirstFragment extends Fragment {
 //            User userLogged = userViewModel.findUserByEmail(currentUser.getEmail());
 //            Bundle bundle = new Bundle();
 //            bundle.putSerializable("user", userLogged);
-            NavHostFragment.findNavController(FirstFragment.this)
-                    .navigate(R.id.homeFragment3);
+            /*NavHostFragment.findNavController(FirstFragment.this)
+                    .navigate(R.id.homeFragment);*/
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            startActivity(intent);
         }
     }
 

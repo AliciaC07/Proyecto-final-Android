@@ -14,6 +14,10 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="Theme.Commercee.NoActionBar">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Commercee.NoActionBarLogin">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
