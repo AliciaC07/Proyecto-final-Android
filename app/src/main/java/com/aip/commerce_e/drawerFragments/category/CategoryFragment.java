@@ -32,7 +32,7 @@ public class CategoryFragment extends Fragment implements RecyclerViewInterface 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentCategoryBinding.inflate(inflater,container,false);
-
+        ImageView imgV = getParentFragment().getActivity().findViewById(R.id.userImg);
         return binding.getRoot();
     }
 
