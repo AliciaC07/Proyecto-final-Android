@@ -11,7 +11,7 @@ import com.aip.commerce_e.models.User;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Product.class, Category.class, User.class}, version = 1, exportSchema = false)
+@Database(entities = {Product.class, Category.class, User.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static String NAME = "commerce";
     private static volatile AppDatabase INSTANCE;
@@ -22,6 +22,7 @@ public abstract class AppDatabase extends RoomDatabase {
         if(INSTANCE == null){
             synchronized (AppDatabase.class) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, NAME)
+                        .fallbackToDestructiveMigration()
                         .build();
             }
         }

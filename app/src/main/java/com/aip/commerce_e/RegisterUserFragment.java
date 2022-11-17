@@ -176,7 +176,6 @@ public class RegisterUserFragment extends Fragment {
         user.setUIdFirebase(uuid);
         userViewModel.insert(user);
         clear();
-
     }
     void imageChooser(String type) {
 
@@ -196,7 +195,7 @@ public class RegisterUserFragment extends Fragment {
             activityResultLauncher.launch(intent);
             selectedImage = true;
         }
-        }
+    }
     void takeImage(){
         if (binding.getRoot().getContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
