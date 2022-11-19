@@ -22,4 +22,6 @@
     <fragment android:id="@+id/createCategoryFragment"
               android:name="com.aip.commerce_e.drawerFragments.category.actions.CreateCategoryFragment"
               android:label="fragment_create_category" tools:layout="@layout/fragment_create_category"/>
+    <fragment android:id="@+id/firstFragment2" android:name="com.aip.commerce_e.FirstFragment"
+              android:label="@string/login_fragment_label" tools:layout="@layout/fragment_first"/>
 </navigation>

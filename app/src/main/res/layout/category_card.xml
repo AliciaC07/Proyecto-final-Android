@@ -8,11 +8,11 @@
         android:animateLayoutChanges="true"
         app:cardCornerRadius="20dp"
         app:cardElevation="4dp"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true" android:background="#424555">
     <androidx.appcompat.widget.LinearLayoutCompat
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content" android:background="#545768">
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:text="Category_name"
                     android:layout_marginTop="20dp"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" android:textColor="@color/white"/>
         </LinearLayout>
         <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
