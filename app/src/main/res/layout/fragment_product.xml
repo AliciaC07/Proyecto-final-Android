@@ -4,11 +4,11 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".drawerFragments.product.ProductFragment">
+        tools:context=".drawerFragments.product.ProductFragment" android:background="#424555">
 
     <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Product Fragment" android:textSize="70sp"/>
+            android:text="Product Fragment" android:textSize="70sp" android:textColor="@color/white"/>
 
 </FrameLayout>

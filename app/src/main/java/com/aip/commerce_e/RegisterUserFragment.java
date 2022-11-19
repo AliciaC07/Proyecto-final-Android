@@ -113,7 +113,7 @@ public class RegisterUserFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentRegisterUserBinding.inflate(inflater, container, false);
         storageReference = FirebaseStorage.getInstance().getReference();
-        userViewModel =new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mAuth = FirebaseAuth.getInstance();
 
         binding.imageView2.setOnClickListener(view -> {
