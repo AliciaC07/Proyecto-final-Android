@@ -23,6 +23,7 @@ public class Category implements Serializable {
     private String name;
     private String uIdFirebase;
     private String imageUrl;
+    private Boolean used = false;
     @ColumnInfo(defaultValue = "true")
     private Boolean active = true;
 
