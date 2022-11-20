@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         mAuth = FirebaseAuth.getInstance();
+        email = mAuth.getCurrentUser().getEmail();
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
@@ -73,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
 //        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        try {
+            userLogged = userViewModel.findUserByEmail(email);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         binding.navView.setNavigationItemSelectedListener(item -> {
             switch(item.getItemId()){
@@ -97,6 +103,15 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return false;
         });
+
+        View headerView = navigationView.getHeaderView(0);
+        ImageView imageView = headerView.findViewById(R.id.userImg);
+        TextView username = headerView.findViewById(R.id.username);
+        TextView emailUser = headerView.findViewById(R.id.emailview);
+        Picasso.get().load(userLogged.getImageUrl())
+                .into(imageView);
+        username.setText(userLogged.getName()+" "+userLogged.getLastName());
+        emailUser.setText(userLogged.getEmail());
 
 
 
