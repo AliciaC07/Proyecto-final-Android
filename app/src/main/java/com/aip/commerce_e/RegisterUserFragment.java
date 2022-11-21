@@ -215,6 +215,10 @@ public class RegisterUserFragment extends Fragment {
             Toast.makeText(binding.getRoot().getContext(), "Must fill all fields", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if (binding.spnRoles.getSelectedItem().toString().equalsIgnoreCase("Select role")){
+            Toast.makeText(binding.getRoot().getContext(), "Must select a role", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         if (imageUri == null){
             Toast.makeText(binding.getRoot().getContext(), "Must select an image", Toast.LENGTH_SHORT).show();
             return false;

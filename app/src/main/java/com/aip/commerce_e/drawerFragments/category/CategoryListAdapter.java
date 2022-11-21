@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import com.aip.commerce_e.MainActivity;
 import com.aip.commerce_e.R;
 import com.aip.commerce_e.RecyclerViewInterface;
 import com.aip.commerce_e.models.Category;
@@ -42,6 +43,10 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     public void onBindViewHolder(@NonNull @NotNull CategoryViewHolder holder, int position) {
         final long IMG_SIZE = 3024*3024;
         Category category = categories.get(position);
+        if (MainActivity.userLogged.getRole().equalsIgnoreCase("User")){
+            holder.deleteBtn.setVisibility(View.INVISIBLE);
+            holder.editBtn.setVisibility(View.INVISIBLE);
+        }
         if(categories != null){
             // call category img
             holder.categoryName.setText(category.getName());

@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     public ActionBarDrawerToggle drawerToggle;
     private UserViewModel userViewModel;
     private  String email = "12345@gmail.com";
-    private User userLogged;
+    public static User userLogged;
     private FirebaseAuth mAuth;
 
     @SuppressLint({"ResourceType", "NonConstantResourceId"})
