@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import com.aip.commerce_e.MainActivity;
 import com.aip.commerce_e.R;
 import com.aip.commerce_e.RecyclerViewInterface;
 import com.aip.commerce_e.databinding.FragmentCategoryBinding;
@@ -42,6 +43,9 @@ public class CategoryFragment extends Fragment implements RecyclerViewInterface 
 
         binding.categoryRcv.setLayoutManager(new LinearLayoutManager(this.getContext()));
         binding.categoryRcv.setAdapter(categoryListAdapter);
+        if (MainActivity.userLogged.getRole().equalsIgnoreCase("User")){
+            binding.addCategoryFab.setVisibility(View.INVISIBLE);
+        }
 
         return binding.getRoot();
     }
