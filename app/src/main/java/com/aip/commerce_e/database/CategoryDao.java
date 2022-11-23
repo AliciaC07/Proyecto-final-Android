@@ -1,11 +1,9 @@
 package com.aip.commerce_e.database;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
+import androidx.room.*;
 import com.aip.commerce_e.models.Category;
+import com.aip.commerce_e.models.CategoryProduct;
 import com.aip.commerce_e.models.Product;
 
 import java.util.List;
@@ -31,4 +29,9 @@ public interface CategoryDao {
 
     @Query("SELECT * from category_table WHERE active = :status ORDER BY name ASC")
     LiveData<List<Category>> getAllActiveCategory(Boolean status);
+
+    @Transaction
+    @Query("SELECT * FROM category_table")
+    public List<CategoryProduct> getCategoryProducts();
+
 }
