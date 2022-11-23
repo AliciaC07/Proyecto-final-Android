@@ -1,6 +1,7 @@
 package com.aip.commerce_e.drawerFragments.category;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,11 +20,14 @@ import com.aip.commerce_e.R;
 import com.aip.commerce_e.RecyclerViewInterface;
 import com.aip.commerce_e.databinding.FragmentCategoryBinding;
 import com.aip.commerce_e.models.Category;
+import com.aip.commerce_e.models.CategoryProduct;
 import com.aip.commerce_e.models.CategoryViewModel;
+import com.aip.commerce_e.models.Product;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class CategoryFragment extends Fragment implements RecyclerViewInterface {
 
@@ -46,6 +50,19 @@ public class CategoryFragment extends Fragment implements RecyclerViewInterface 
         if (MainActivity.userLogged.getRole().equalsIgnoreCase("User")){
             binding.addCategoryFab.setVisibility(View.INVISIBLE);
         }
+//        try {
+//            List<CategoryProduct> categoryProducts = categoryViewModel.getAllProductsWithCategory();
+//            Log.i("Tam ", String.valueOf(categoryProducts.size()));
+//            for (CategoryProduct c : categoryProducts) {
+//                for (Product p: c.products
+//                     ) {
+//                    Log.i("Producto", p.getName());
+//                }
+//            }
+//
+//        } catch (ExecutionException | InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
         return binding.getRoot();
     }

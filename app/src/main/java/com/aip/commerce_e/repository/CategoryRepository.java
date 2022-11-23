@@ -1,14 +1,19 @@
 package com.aip.commerce_e.repository;
 
 import android.app.Application;
+import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 import com.aip.commerce_e.database.AppDatabase;
 import com.aip.commerce_e.database.CategoryDao;
 import com.aip.commerce_e.database.ProductDao;
+import com.aip.commerce_e.database.UserDao;
 import com.aip.commerce_e.models.Category;
+import com.aip.commerce_e.models.CategoryProduct;
 import com.aip.commerce_e.models.Product;
+import com.aip.commerce_e.models.User;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class CategoryRepository {
 
@@ -47,5 +52,19 @@ public class CategoryRepository {
     public void deleteById(Integer id){
         AppDatabase.databaseWriteExecutor.execute(() ->
                 categoryDao.deleteById(false, id));
+    }
+    public List<CategoryProduct> getCategoryWithProducts() throws ExecutionException, InterruptedException {
+        return new getAllCategoryProducts(categoryDao).execute().get();
+    }
+
+    private static class getAllCategoryProducts extends AsyncTask<Void, Void, List<CategoryProduct>> {
+        private CategoryDao asyncCategoryDao;
+
+        getAllCategoryProducts(CategoryDao asyncCategoryDao){ this.asyncCategoryDao = asyncCategoryDao; }
+        @Override
+        protected List<CategoryProduct> doInBackground(Void... emails) {
+            List<CategoryProduct> categoryProducts = asyncCategoryDao.getCategoryProducts();
+            return categoryProducts;
+        }
     }
 }

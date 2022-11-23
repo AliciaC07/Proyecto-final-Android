@@ -8,6 +8,7 @@ import com.aip.commerce_e.repository.CategoryRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class CategoryViewModel extends AndroidViewModel {
     private CategoryRepository categoryRepository;
@@ -38,5 +39,8 @@ public class CategoryViewModel extends AndroidViewModel {
 
     public void deleteById(Integer id){
         categoryRepository.deleteById(id);
+    }
+    public List<CategoryProduct> getAllProductsWithCategory() throws ExecutionException, InterruptedException {
+        return categoryRepository.getCategoryWithProducts();
     }
 }
