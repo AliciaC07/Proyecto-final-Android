@@ -22,6 +22,7 @@ public class Product implements Serializable {
     private String name;
     private Float price;
 
+    @ColumnInfo(name = "categoryId")
     private Integer categoryId;
 
     @ColumnInfo(defaultValue = "true")
