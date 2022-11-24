@@ -8,13 +8,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.navigation.fragment.NavHostFragment;
+import com.aip.commerce_e.MainActivity;
 import com.aip.commerce_e.R;
 import com.aip.commerce_e.databinding.FragmentCategoryBinding;
 import com.aip.commerce_e.databinding.FragmentProductBinding;
+import com.aip.commerce_e.drawerFragments.category.CategoryFragment;
 import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.models.ProductViewModel;
 
 public class ProductFragment extends Fragment {
+
 
     private ProductViewModel mViewModel;
     private FragmentProductBinding binding;
@@ -34,15 +38,19 @@ public class ProductFragment extends Fragment {
 //        p.setName("T-shirt Hombre Under Armor");
 //        p.setCategoryId(1);
 //        mViewModel.insert(p);
+        if (MainActivity.userLogged.getRole().equalsIgnoreCase("User")){
+            binding.addProductFab.setVisibility(View.INVISIBLE);
+        }
 
         return binding.getRoot();
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // TODO: Use the ViewModel
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // create edit/create view
+        binding.addProductFab.setOnClickListener(view1 ->
+                NavHostFragment.findNavController(ProductFragment.this)
+                        .navigate(R.id.createProductFragment));
     }
 
 }
