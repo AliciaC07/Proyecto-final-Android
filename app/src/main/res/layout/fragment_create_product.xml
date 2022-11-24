@@ -10,6 +10,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <!-- Here goes multiple image uploader -->
+        <ImageView
+                android:layout_marginVertical="20dp"
+                android:layout_marginHorizontal="16dp"
+                android:id="@+id/product_image_picker"
+                android:layout_width="match_parent"
+                android:layout_height="199dp"
+                android:background="#FFFFFF"/>
         <EditText
                 android:hint="@string/enter_product_name"
                 android:textColor="#FFFFFF"
