@@ -1,6 +1,7 @@
 package com.aip.commerce_e.drawerFragments.product.actions;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,15 +23,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import com.aip.commerce_e.R;
 import com.aip.commerce_e.databinding.FragmentCreateProductBinding;
+import com.aip.commerce_e.drawerFragments.category.actions.CreateCategoryFragment;
 import com.aip.commerce_e.models.Category;
 import com.aip.commerce_e.models.CategoryViewModel;
+import com.aip.commerce_e.models.Product;
+import com.aip.commerce_e.models.ProductViewModel;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -38,27 +50,60 @@ import static android.app.Activity.RESULT_OK;
 public class CreateProductFragment extends Fragment {
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     FragmentCreateProductBinding binding;
+    ProductViewModel productViewModel;
+    private StorageTask UploadTask;
+    private Product aux;
     ArrayList<Uri> imageUris  = new ArrayList<>();
     boolean selectedImage = false;
-    private static final int IMAGE_PICKER = 1;
-    private static final int READ_PERMISSION = 101;
+    FirebaseStorage storage;
+    StorageReference storageReference;
+    StorageReference ref;
+    private boolean isEdit = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreateProductBinding.inflate(inflater,container,false);
         CategoryViewModel categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
+        productViewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
         categoryViewModel.findAllActive(true).observe(getViewLifecycleOwner(),
                 categories -> {
                     ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<Category>(getContext(), android.R.layout.simple_spinner_item, categories);
                     categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     binding.productCategorySpn.setAdapter(categoryAdapter);
+                    if(getArguments() != null) {
+                        Category myCat = categoryViewModel.findById(aux.getCategoryId());
+                        int i = categories.indexOf(myCat);
+                        binding.productCategorySpn.setSelection(i);
+                    }
                 });
+        if(getArguments() != null){
+            isEdit = true;
+            binding.btnRegisterProduct.setText("Update");
+            aux = (Product) getArguments().getSerializable("editCategory");
+            binding.productNameTxt.setText(aux.getName());
+            binding.productPriceTxt.setText(aux.getPrice().toString());
+            if(aux.getPhotosId() != null) {
+                StorageReference myRef = storage.getReference().child("products/"+"uuid");
+                myRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        long IMG_SIZE = 3024*3024;
+                        listResult.getItems().get(0).getDownloadUrl().addOnSuccessListener(uri -> {
+                            Picasso.get().load(uri).into(binding.productImagePicker);
+                        });
+                        //FileDownloadTask path = storageReference.getFile(categoryUri);
+                    }
+                });
+            }
+            binding.productImagePicker.setClickable(false);
+        }
 
 
         binding.productImagePicker.setOnClickListener(view -> {
@@ -82,8 +127,11 @@ public class CreateProductFragment extends Fragment {
             popup.show();
         });
         binding.btnRegisterProduct.setOnClickListener(view -> {
-            Category category = (Category) binding.productCategorySpn.getSelectedItem();
-            Toast.makeText(getContext(),category.getId().toString(), Toast.LENGTH_SHORT).show();
+            if(isEdit){
+                updateProduct();
+            }else {
+                // for each image upload file
+            }
         });
         return binding.getRoot();
     }
@@ -125,6 +173,7 @@ public class CreateProductFragment extends Fragment {
 
                         Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
                         Uri imageUri = getImageUri(binding.getRoot().getContext(), photo);
+                        imageUris.add(imageUri);
                         // Set the image in imageview for display
                         binding.productImagePicker.setImageBitmap(photo);
                     }
@@ -135,12 +184,14 @@ public class CreateProductFragment extends Fragment {
     void imageChooser(String type) {
         if (type.equals("image/*")){
             Intent i = new Intent();
+            i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             i.setType(type);
             i.setAction(Intent.ACTION_GET_CONTENT);
             activityResultLauncher.launch(i);
             selectedImage = true;
         }else {
-            Intent intent = new Intent(Intent.ACTION_PICK_ACTIVITY, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             activityResultLauncher.launch(intent);
             selectedImage = true;
         }
@@ -165,5 +216,74 @@ public class CreateProductFragment extends Fragment {
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
+    }
+
+    private void uploadFile(String uuid, Uri imageUri, boolean isLast) {
+        if (imageUri != null) {
+            // Defining the child of storageReference
+            ref = storageReference.child("products/"+uuid+"/"+ UUID.randomUUID().toString());
+
+            UploadTask = ref.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+//                        Handler handler = new Handler();
+//                        handler.postDelayed(() -> binding.categoryProgressBar.setProgress(0), 500);
+                        if(isLast)
+                            insertProduct(uuid);
+                            //ref.getDownloadUrl().addOnSuccessListener(uri -> insertCategory(uri.toString(), uuid));
+                        ///Toast.makeText(binding.getRoot().getContext(), "Upload successful", Toast.LENGTH_LONG).show();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
+//                    .addOnProgressListener(taskSnapshot -> {
+//                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+//                        binding.categoryProgressBar.setProgress((int) progress);
+//                    });
+        } else {
+            Toast.makeText(binding.getRoot().getContext(), "No file selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /*private void updateFile(String uuid){
+        if (imageUris != null) {
+            // Defining the child of storageReference
+            ref = storageReference.child("products/"+uuid+"/"+ UUID.randomUUID().toString());
+
+            UploadTask = ref.putFile(imageUris).addOnSuccessListener(taskSnapshot -> {
+//                        Handler handler = new Handler();
+//                        handler.postDelayed(() -> binding.categoryProgressBar.setProgress(0), 500);
+                        ref.getDownloadUrl().addOnSuccessListener(uri -> updateCategory(uri.toString(), uuid));
+                        ///Toast.makeText(binding.getRoot().getContext(), "Upload successful", Toast.LENGTH_LONG).show();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
+//                    .addOnProgressListener(taskSnapshot -> {
+//                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+//                        binding.categoryProgressBar.setProgress((int) progress);
+//                    });
+        } else {
+            //Toast.makeText(binding.getRoot().getContext(), "No file selected", Toast.LENGTH_SHORT).show();
+            updateCategory(aux.getImageUrl(), aux.getUIdFirebase());
+        }
+    }*/
+    public void updateProduct(){
+        aux.setName(binding.productNameTxt.getText().toString());
+        aux.setPrice(Float.parseFloat(binding.productPriceTxt.getText().toString()));
+        Category category = (Category)binding.productCategorySpn.getSelectedItem();
+        aux.setCategoryId(category.getId());
+        productViewModel.update(aux);
+        clear();
+    }
+    public void insertProduct(String uuid){
+        Product product = new Product();
+        Category category = (Category)binding.productCategorySpn.getSelectedItem();
+        product.setName(binding.productNameTxt.getText().toString());
+        product.setPhotosId(uuid);
+        product.setActive(true);
+        product.setCategoryId(category.getId());
+        product.setPrice(Float.parseFloat(binding.productPriceTxt.getText().toString()));
+        productViewModel.insert(product);
+        clear();
+    }
+    public void clear(){
+        //binding.categoryProgressBar.setProgress(0);
+        NavHostFragment.findNavController(CreateProductFragment.this)
+                .navigate(R.id.productFragment);
     }
 }
