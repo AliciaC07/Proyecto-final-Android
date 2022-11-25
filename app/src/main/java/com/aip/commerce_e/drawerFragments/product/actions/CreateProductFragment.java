@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class CreateProductFragment extends Fragment {
     FragmentCreateProductBinding binding;
     ProductViewModel productViewModel;
     private StorageTask UploadTask;
+    private String thumbnail = "";
     private Product aux;
     ArrayList<Uri> imageUris  = new ArrayList<>();
     boolean selectedImage = false;
@@ -69,6 +71,8 @@ public class CreateProductFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
         binding = FragmentCreateProductBinding.inflate(inflater,container,false);
         CategoryViewModel categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
         productViewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
@@ -89,20 +93,11 @@ public class CreateProductFragment extends Fragment {
             aux = (Product) getArguments().getSerializable("editCategory");
             binding.productNameTxt.setText(aux.getName());
             binding.productPriceTxt.setText(aux.getPrice().toString());
-            if(aux.getPhotosId() != null) {
-                StorageReference myRef = storage.getReference().child("products/"+"uuid");
-                myRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-                    @Override
-                    public void onSuccess(ListResult listResult) {
-                        long IMG_SIZE = 3024*3024;
-                        listResult.getItems().get(0).getDownloadUrl().addOnSuccessListener(uri -> {
-                            Picasso.get().load(uri).into(binding.productImagePicker);
-                        });
-                        //FileDownloadTask path = storageReference.getFile(categoryUri);
-                    }
-                });
+            if(aux.getThumbnailUrl() != null) {
+                Picasso.get().load(Uri.parse(aux.getThumbnailUrl())).into(binding.productImagePicker);
             }
             binding.productImagePicker.setClickable(false);
+            binding.imageWarning.setVisibility(View.INVISIBLE);
         }
 
 
@@ -131,6 +126,10 @@ public class CreateProductFragment extends Fragment {
                 updateProduct();
             }else {
                 // for each image upload file
+                String uuid = UUID.randomUUID().toString();
+                for(int i = 0; i < imageUris.size(); i ++){
+                    uploadFile(uuid, imageUris.get(i),i == imageUris.size()-1, i == 0);
+                }
             }
         });
         return binding.getRoot();
@@ -218,16 +217,22 @@ public class CreateProductFragment extends Fragment {
         return Uri.parse(path);
     }
 
-    private void uploadFile(String uuid, Uri imageUri, boolean isLast) {
+    private void uploadFile(String uuid, Uri imageUri, boolean isLast, boolean isFirst) {
         if (imageUri != null) {
-            // Defining the child of storageReference
-            ref = storageReference.child("products/"+uuid+"/"+ UUID.randomUUID().toString());
 
-            UploadTask = ref.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+            // Defining the child of storageReference
+            StorageReference myref = storageReference.child("products/"+uuid+"/"+ UUID.randomUUID().toString());
+
+            UploadTask = myref.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
 //                        Handler handler = new Handler();
 //                        handler.postDelayed(() -> binding.categoryProgressBar.setProgress(0), 500);
+                        if(isFirst)
+                            myref.getDownloadUrl().addOnSuccessListener(uri -> {
+                                thumbnail = uri.toString();
+                                Log.i("Download url", thumbnail);
+                            });
                         if(isLast)
-                            insertProduct(uuid);
+                            insertProduct(uuid, thumbnail);
                             //ref.getDownloadUrl().addOnSuccessListener(uri -> insertCategory(uri.toString(), uuid));
                         ///Toast.makeText(binding.getRoot().getContext(), "Upload successful", Toast.LENGTH_LONG).show();
                     })
@@ -270,13 +275,14 @@ public class CreateProductFragment extends Fragment {
         productViewModel.update(aux);
         clear();
     }
-    public void insertProduct(String uuid){
+    public void insertProduct(String uuid, String thumbnailUrl){
         Product product = new Product();
         Category category = (Category)binding.productCategorySpn.getSelectedItem();
         product.setName(binding.productNameTxt.getText().toString());
         product.setPhotosId(uuid);
         product.setActive(true);
         product.setCategoryId(category.getId());
+        product.setThumbnailUrl(thumbnailUrl);
         product.setPrice(Float.parseFloat(binding.productPriceTxt.getText().toString()));
         productViewModel.insert(product);
         clear();

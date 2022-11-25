@@ -27,7 +27,7 @@ public interface ProductDao {
     @Query("SELECT * from product_table ORDER BY price ASC")
     LiveData<List<Product>> getAllProducts();
 
-    @Query("SELECT * from product_table WHERE active = 'true' ORDER BY price ASC")
-    LiveData<List<Product>> getAllActiveProducts();
+    @Query("SELECT * from product_table WHERE active = :status ORDER BY price ASC")
+    LiveData<List<Product>> getAllActiveProducts(boolean status);
 
 }

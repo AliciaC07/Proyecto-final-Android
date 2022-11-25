@@ -36,6 +36,7 @@ public class ProductViewModel extends AndroidViewModel {
     public LiveData<List<Product>> findAll() {
         return productAll;
     }
+    public LiveData<List<Product>> findAllActive(boolean status) {return productRepository.findAllActive(status);}
 
     public void deleteById(Integer id){
         productRepository.deleteById(id);

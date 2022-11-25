@@ -9,23 +9,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import com.aip.commerce_e.MainActivity;
 import com.aip.commerce_e.R;
+import com.aip.commerce_e.RecyclerViewInterface;
 import com.aip.commerce_e.databinding.FragmentCategoryBinding;
 import com.aip.commerce_e.databinding.FragmentProductBinding;
 import com.aip.commerce_e.drawerFragments.category.CategoryFragment;
 import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.models.ProductViewModel;
 
-public class ProductFragment extends Fragment {
+import java.util.List;
+
+public class ProductFragment extends Fragment implements RecyclerViewInterface {
 
 
     private ProductViewModel mViewModel;
     private FragmentProductBinding binding;
+    List<Product> products;
+    ProductListAdapter productListAdapter;
 
-    public static ProductFragment newInstance() {
-        return new ProductFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -33,6 +36,11 @@ public class ProductFragment extends Fragment {
 
         binding = FragmentProductBinding.inflate(inflater, container, false);
         mViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        productListAdapter = new ProductListAdapter(null, this);
+        mViewModel.findAllActive(true).observe(getViewLifecycleOwner(),
+                products1 -> productListAdapter.setProducts(products1));
+        binding.productRcv.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        binding.productRcv.setAdapter(productListAdapter);
 //        Product p = new Product();
 //        p.setPrice(50.78f);
 //        p.setName("T-shirt Hombre Under Armor");
@@ -53,4 +61,13 @@ public class ProductFragment extends Fragment {
                         .navigate(R.id.createProductFragment));
     }
 
+    @Override
+    public void editOnClick(int pos) {
+
+    }
+
+    @Override
+    public void deleteOnclick(int pos) {
+
+    }
 }

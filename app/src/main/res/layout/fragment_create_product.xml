@@ -11,12 +11,20 @@
             android:layout_height="match_parent">
         <!-- Here goes multiple image uploader -->
         <ImageView
-                android:layout_marginVertical="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="16dp"
                 android:id="@+id/product_image_picker"
                 android:layout_width="match_parent"
                 android:layout_height="199dp"
                 android:background="#FFFFFF"/>
+        <TextView
+                android:id="@+id/image_warning"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:text="The first element selected will become the product thumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         <EditText
                 android:hint="@string/enter_product_name"
                 android:textColor="#FFFFFF"

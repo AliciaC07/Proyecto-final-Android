@@ -14,7 +14,7 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/category_rcv"/>
+                android:id="@+id/product_rcv"/>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:src="@drawable/ic_baseline_add_24"
                 android:layout_width="wrap_content"

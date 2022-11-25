@@ -1,5 +1,7 @@
 package com.aip.commerce_e.drawerFragments.product;
 
+import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.aip.commerce_e.MainActivity;
 import com.aip.commerce_e.R;
 import com.aip.commerce_e.RecyclerViewInterface;
 import com.aip.commerce_e.models.Product;
+import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -32,6 +35,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         return new ProductViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.product_card,parent,false), recyclerViewInterface);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull @NotNull ProductViewHolder holder, int position) {
         final long IMG_SIZE = 3024*3024;
@@ -39,6 +43,13 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         if(MainActivity.userLogged.getRole().equalsIgnoreCase("User")){
             holder.deleteBtn.setVisibility(View.INVISIBLE);
             holder.editBtn.setVisibility(View.INVISIBLE);
+        }
+        if(products != null){
+            holder.productName.setText(product.getName());
+            holder.productPrice.setText("$"+product.getPrice().toString());
+            if (product.getThumbnailUrl()!= null)
+                Picasso.get().load(Uri.parse(product.getThumbnailUrl()))
+                        .into(holder.productImg);
         }
     }
 

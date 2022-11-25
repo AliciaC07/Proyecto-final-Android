@@ -26,6 +26,7 @@ public class Product implements Serializable {
     @ColumnInfo(name = "categoryId")
     private Integer categoryId;
     private String photosId;
+    private String thumbnailUrl;
 
     @ColumnInfo(defaultValue = "true")
     private Boolean active = true;
