@@ -70,4 +70,14 @@ public class ProductFragment extends Fragment implements RecyclerViewInterface {
     public void deleteOnclick(int pos) {
 
     }
+
+    @Override
+    public void navigateOnClick(int pos) {
+        Product product = productListAdapter.products.get(pos);
+        Bundle bundle = new Bundle();
+
+        bundle.putSerializable("product", product);
+        NavHostFragment.findNavController(ProductFragment.this)
+                .navigate(R.id.productViewFragment, bundle);
+    }
 }

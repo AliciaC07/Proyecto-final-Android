@@ -96,4 +96,9 @@ public class CategoryFragment extends Fragment implements RecyclerViewInterface 
         categoryViewModel.deleteById(category.getId());
 
     }
+
+    @Override
+    public void navigateOnClick(int pos) {
+
+    }
 }

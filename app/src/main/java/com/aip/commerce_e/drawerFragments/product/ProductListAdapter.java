@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.aip.commerce_e.MainActivity;
 import com.aip.commerce_e.R;
@@ -68,6 +70,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         ImageView productImg;
         TextView productPrice, productName;
         ImageButton editBtn, deleteBtn;
+        LinearLayoutCompat card;
 
         public ProductViewHolder(@NonNull @NotNull View itemView, RecyclerViewInterface recyclerViewInterface) {
             super(itemView);
@@ -76,8 +79,34 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             productPrice = itemView.findViewById(R.id.product_price);
             editBtn = itemView.findViewById(R.id.product_edit);
             deleteBtn = itemView.findViewById(R.id.product_delete);
+            card = itemView.findViewById(R.id.product_card);
 
+            // set card on click method
+            card.setOnClickListener(view -> {
+                if(recyclerViewInterface != null){
+                    int pos = getBindingAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION){
+                        recyclerViewInterface.navigateOnClick(pos);
+                    }
+                }
+            });
             //set edit and delete actions
+            editBtn.setOnClickListener(view -> {
+                if(recyclerViewInterface != null){
+                    int pos = getBindingAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION){
+                        recyclerViewInterface.editOnClick(pos);
+                    }
+                }
+            });
+
+            deleteBtn.setOnClickListener(view -> {
+                if(recyclerViewInterface != null){
+                    int pos = getBindingAdapterPosition();
+                    if(pos != RecyclerView.NO_POSITION)
+                        recyclerViewInterface.deleteOnclick(pos);
+                }
+            });
 
         }
     }

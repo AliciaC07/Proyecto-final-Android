@@ -52,6 +52,7 @@ public class CreateProductFragment extends Fragment {
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     FragmentCreateProductBinding binding;
     ProductViewModel productViewModel;
+    CategoryViewModel categoryViewModel;
     private StorageTask UploadTask;
     private String thumbnail = "";
     private Product aux;
@@ -74,7 +75,7 @@ public class CreateProductFragment extends Fragment {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         binding = FragmentCreateProductBinding.inflate(inflater,container,false);
-        CategoryViewModel categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
+        categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
         productViewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
         categoryViewModel.findAllActive(true).observe(getViewLifecycleOwner(),
                 categories -> {
@@ -202,6 +203,7 @@ public class CreateProductFragment extends Fragment {
                 selectedImage = true;
             }else {
                 Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                camera_intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 // Start the activity with camera_intent, and request pic id
                 activityResultLauncherCamera.launch(camera_intent);
                 selectedImage = true;
@@ -278,6 +280,8 @@ public class CreateProductFragment extends Fragment {
     public void insertProduct(String uuid, String thumbnailUrl){
         Product product = new Product();
         Category category = (Category)binding.productCategorySpn.getSelectedItem();
+        // make category used true
+        category.setUsed(true);
         product.setName(binding.productNameTxt.getText().toString());
         product.setPhotosId(uuid);
         product.setActive(true);
@@ -285,6 +289,7 @@ public class CreateProductFragment extends Fragment {
         product.setThumbnailUrl(thumbnailUrl);
         product.setPrice(Float.parseFloat(binding.productPriceTxt.getText().toString()));
         productViewModel.insert(product);
+        categoryViewModel.update(category);
         clear();
     }
     public void clear(){

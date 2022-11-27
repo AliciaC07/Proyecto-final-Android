@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent" android:background="#424555">
     <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/product_card"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:background="#545768">
