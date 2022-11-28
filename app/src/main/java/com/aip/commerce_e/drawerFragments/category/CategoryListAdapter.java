@@ -5,11 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.aip.commerce_e.MainActivity;
@@ -76,6 +74,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         ImageView categoryImg;
         TextView categoryName;
         ImageButton editBtn, deleteBtn;
+        LinearLayoutCompat card;
         public CategoryViewHolder (@NonNull View itemView, RecyclerViewInterface recyclerViewInterface){
             super(itemView);
 
@@ -83,6 +82,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
             categoryName = itemView.findViewById(R.id.category_name);
             editBtn = itemView.findViewById(R.id.category_edit);
             deleteBtn = itemView.findViewById(R.id.category_delete);
+            card = itemView.findViewById(R.id.category_card);
+
+            card.setOnClickListener(view -> {
+                if(recyclerViewInterface != null){
+                    int pos = getBindingAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION){
+                        recyclerViewInterface.navigateOnClick(pos);
+                    }
+                }
+            });
             editBtn.setOnClickListener(view -> {
                 if(recyclerViewInterface != null){
                     int pos = getBindingAdapterPosition();

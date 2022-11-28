@@ -12,13 +12,11 @@ public class ProductRepository {
 
     private ProductDao productDao;
     private LiveData<List<Product>> mAllProduct;
-    private LiveData<List<Product>> activeAllProduct;
 
     public ProductRepository(Application application) {
         AppDatabase db = AppDatabase.getInstance(application);
         productDao = db.productDao();
         mAllProduct = productDao.getAllProducts();
-        activeAllProduct = productDao.getAllActiveProducts();
     }
 
     public void insert(Product product) {
@@ -39,8 +37,8 @@ public class ProductRepository {
         return mAllProduct;
     }
 
-    public LiveData<List<Product>> findAllActive(){
-        return activeAllProduct;
+    public LiveData<List<Product>> findAllActive(boolean status){
+        return productDao.getAllActiveProducts(status);
     }
     public void deleteById(Integer id){
         AppDatabase.databaseWriteExecutor.execute(() ->

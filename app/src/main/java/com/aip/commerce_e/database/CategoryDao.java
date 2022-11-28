@@ -5,6 +5,7 @@ import androidx.room.*;
 import com.aip.commerce_e.models.Category;
 import com.aip.commerce_e.models.CategoryProduct;
 import com.aip.commerce_e.models.Product;
+import com.aip.commerce_e.repository.CategoryRepository;
 
 import java.util.List;
 
@@ -33,5 +34,7 @@ public interface CategoryDao {
     @Transaction
     @Query("SELECT * FROM category_table")
     public List<CategoryProduct> getCategoryProducts();
+    @Query("SELECT * from category_table WHERE category_id = :id")
+    public Category findById(Integer id);
 
 }

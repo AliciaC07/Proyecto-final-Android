@@ -65,5 +65,9 @@ dependencies {
 
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
+
+    implementation 'com.ouattararomuald:slider-picasso:3.0.1'
+    //implementation 'me.relex:CircleIndicator:2.1.6'
+    implementation 'org.imaginativeworld.whynotimagecarousel:whynotimagecarousel:2.1.0'
 }
 apply plugin: 'com.google.gms.google-services'

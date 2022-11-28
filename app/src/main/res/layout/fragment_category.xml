@@ -4,20 +4,26 @@
         xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".drawerFragments.category.CategoryFragment" android:background="#424555">
-    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-                                                       android:layout_height="match_parent">
+        tools:context=".drawerFragments.category.CategoryFragment"
+        android:background="#424555">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/category_rcv"/>
+                android:layout_height="match_parent"
+                android:id="@+id/category_rcv"/>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:src="@drawable/ic_baseline_add_category_24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true" android:id="@+id/add_category_fab"
-                android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:id="@+id/add_category_fab"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="16dp"
                 tools:ignore="SpeakableTextPresentCheck"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

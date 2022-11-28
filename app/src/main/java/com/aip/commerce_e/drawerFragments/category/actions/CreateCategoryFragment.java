@@ -237,8 +237,6 @@ public class CreateCategoryFragment extends Fragment {
                     }
                 }
             }
-
-
     );
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

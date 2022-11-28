@@ -56,6 +56,19 @@ public class CategoryRepository {
     public List<CategoryProduct> getCategoryWithProducts() throws ExecutionException, InterruptedException {
         return new getAllCategoryProducts(categoryDao).execute().get();
     }
+    public Category findById(Integer id) throws ExecutionException, InterruptedException {
+        return new findById(categoryDao).execute(id).get();
+    }
+
+    private static class findById extends AsyncTask<Integer, Void, Category>{
+
+        private CategoryDao asyncCategoryDao;
+        findById(CategoryDao asyncCategoryDao){this.asyncCategoryDao = asyncCategoryDao;}
+        @Override
+        protected Category doInBackground(Integer... ids) {
+            return asyncCategoryDao.findById(ids[0]);
+        }
+    }
 
     private static class getAllCategoryProducts extends AsyncTask<Void, Void, List<CategoryProduct>> {
         private CategoryDao asyncCategoryDao;

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -21,9 +22,12 @@ public class Product implements Serializable {
     private Integer id;
     private String name;
     private Float price;
+    // poner descripción
 
     @ColumnInfo(name = "categoryId")
     private Integer categoryId;
+    private String photosId;
+    private String thumbnailUrl;
 
     @ColumnInfo(defaultValue = "true")
     private Boolean active = true;

@@ -43,7 +43,8 @@ public class CategoryFragment extends Fragment implements RecyclerViewInterface 
 
         categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
         categoryListAdapter = new CategoryListAdapter(null, this);
-        categoryViewModel.findAllActive(true).observe(getViewLifecycleOwner(), categories -> categoryListAdapter.setCategories(categories));
+        categoryViewModel.findAllActive(true).observe(getViewLifecycleOwner(),
+                categories -> categoryListAdapter.setCategories(categories));
 
         binding.categoryRcv.setLayoutManager(new LinearLayoutManager(this.getContext()));
         binding.categoryRcv.setAdapter(categoryListAdapter);
@@ -93,6 +94,11 @@ public class CategoryFragment extends Fragment implements RecyclerViewInterface 
             categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
         Category category = categoryListAdapter.getCategories().get(pos);
         categoryViewModel.deleteById(category.getId());
+
+    }
+
+    @Override
+    public void navigateOnClick(int pos) {
 
     }
 }

@@ -43,4 +43,5 @@ public class CategoryViewModel extends AndroidViewModel {
     public List<CategoryProduct> getAllProductsWithCategory() throws ExecutionException, InterruptedException {
         return categoryRepository.getCategoryWithProducts();
     }
+    public Category findById(Integer id) throws ExecutionException, InterruptedException { return categoryRepository.findById(id);}
 }
