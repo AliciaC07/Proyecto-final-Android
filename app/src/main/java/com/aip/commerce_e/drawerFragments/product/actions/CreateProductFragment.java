@@ -44,6 +44,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -83,15 +84,20 @@ public class CreateProductFragment extends Fragment {
                     categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     binding.productCategorySpn.setAdapter(categoryAdapter);
                     if(getArguments() != null) {
-                        Category myCat = categoryViewModel.findById(aux.getCategoryId());
-                        int i = categories.indexOf(myCat);
-                        binding.productCategorySpn.setSelection(i);
+                        Category myCat = null;
+                        try {
+                            myCat = categoryViewModel.findById(aux.getCategoryId());
+                            int i = categories.indexOf(myCat);
+                            binding.productCategorySpn.setSelection(i);
+                        } catch (ExecutionException | InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
         if(getArguments() != null){
             isEdit = true;
             binding.btnRegisterProduct.setText("Update");
-            aux = (Product) getArguments().getSerializable("editCategory");
+            aux = (Product) getArguments().getSerializable("product");
             binding.productNameTxt.setText(aux.getName());
             binding.productPriceTxt.setText(aux.getPrice().toString());
             if(aux.getThumbnailUrl() != null) {

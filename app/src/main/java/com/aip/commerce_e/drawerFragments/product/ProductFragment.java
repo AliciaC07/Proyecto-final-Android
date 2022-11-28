@@ -63,12 +63,17 @@ public class ProductFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void editOnClick(int pos) {
-
+        Product product = productListAdapter.products.get(pos);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("product", product);
+        NavHostFragment.findNavController(ProductFragment.this)
+                .navigate(R.id.createProductFragment, bundle);
     }
 
     @Override
     public void deleteOnclick(int pos) {
-
+        Product product = productListAdapter.products.get(pos);
+        mViewModel.deleteById(product.getId());
     }
 
     @Override

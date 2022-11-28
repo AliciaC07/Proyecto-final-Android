@@ -1,6 +1,6 @@
 package com.aip.commerce_e.drawerFragments.product.actions;
 
-import android.net.Uri;
+
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,17 +8,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.aip.commerce_e.R;
 import com.aip.commerce_e.databinding.FragmentProductViewBinding;
 import com.aip.commerce_e.models.Product;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 import java.util.List;
+
 
 public class ProductViewFragment extends Fragment {
     FragmentProductViewBinding binding;
@@ -38,10 +35,12 @@ public class ProductViewFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         if(getArguments()!=null){
             product = (Product) getArguments().getSerializable("product");
             downloadImgs();
+            binding.nameTag.setText(product.getName());
+            binding.priceTag.setText("$ "+product.getPrice());
         }
         super.onViewCreated(view, savedInstanceState);
     }
@@ -54,18 +53,18 @@ public class ProductViewFragment extends Fragment {
 
     private void downloadImgs() {
         StorageReference myRef = storageReference.child("products/"+product.getPhotosId());
-        List<String> imageUrls = new ArrayList<>();
         myRef.listAll().addOnSuccessListener(listResult -> {
             List<StorageReference> list = listResult.getItems();
             for (StorageReference ref: list) {
                 ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                    imageUrls.add(uri.toString());
+                    //images.add(new CarouselItem(uri.toString()));
+                    binding.carousel.addData(new CarouselItem(uri.toString()));
                 });
             }
         });
         // make call to viewpager adapter here
-        ProductPagerAdapter adapter = new ProductPagerAdapter(getContext(), null);
-        adapter.setImgUrls(imageUrls.toArray(new String[0]));
-        binding.carousel.setAdapter(adapter);
+        /*adapter.setImgUrls(imageUrls);
+        Log.i("Cantidad de fotos", String.valueOf(imageUrls.size()));*/
+
     }
 }
