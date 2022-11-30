@@ -19,12 +19,11 @@ import com.aip.commerce_e.MainActivity;
 import com.aip.commerce_e.R;
 import com.aip.commerce_e.RecyclerViewInterface;
 import com.aip.commerce_e.databinding.FragmentCategoryBinding;
-import com.aip.commerce_e.models.Category;
-import com.aip.commerce_e.models.CategoryProduct;
-import com.aip.commerce_e.models.CategoryViewModel;
-import com.aip.commerce_e.models.Product;
+import com.aip.commerce_e.drawerFragments.product.ProductFragment;
+import com.aip.commerce_e.models.*;
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -98,10 +97,15 @@ public class CategoryFragment extends Fragment implements RecyclerViewInterface 
     }
 
     @Override
-    public void navigateOnClick(int pos) {
+    public void navigateOnClick(int pos){
         if(categoryViewModel == null){
             categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
         }
+        Category category = categoryListAdapter.getCategories().get(pos);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("productsCategory", category);
+        NavHostFragment.findNavController(CategoryFragment.this)
+                .navigate(R.id.productFragment, bundle);
 
     }
 }
