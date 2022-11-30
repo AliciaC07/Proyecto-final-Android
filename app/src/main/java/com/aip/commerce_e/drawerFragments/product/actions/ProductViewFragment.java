@@ -39,7 +39,6 @@ public class ProductViewFragment extends Fragment {
         if(getArguments()!=null){
             product = (Product) getArguments().getSerializable("product");
             downloadImgs();
-            assert binding.idTag != null;
             binding.idTag.setText("# " + product.getId());
             binding.descriptionTag.setText(product.getDescription());
             binding.nameTag.setText(product.getName());

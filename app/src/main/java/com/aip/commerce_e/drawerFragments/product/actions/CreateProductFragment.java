@@ -98,6 +98,7 @@ public class CreateProductFragment extends Fragment {
             isEdit = true;
             binding.btnRegisterProduct.setText("Update");
             aux = (Product) getArguments().getSerializable("product");
+            binding.productDescriptionTxt.setText(aux.getDescription());
             binding.productNameTxt.setText(aux.getName());
             binding.productPriceTxt.setText(aux.getPrice().toString());
             if(aux.getThumbnailUrl() != null) {
@@ -278,6 +279,7 @@ public class CreateProductFragment extends Fragment {
     public void updateProduct(){
         aux.setName(binding.productNameTxt.getText().toString());
         aux.setPrice(Float.parseFloat(binding.productPriceTxt.getText().toString()));
+        aux.setDescription(binding.productDescriptionTxt.getText().toString());
         Category category = (Category)binding.productCategorySpn.getSelectedItem();
         aux.setCategoryId(category.getId());
         productViewModel.update(aux);
@@ -293,6 +295,7 @@ public class CreateProductFragment extends Fragment {
         product.setActive(true);
         product.setCategoryId(category.getId());
         product.setThumbnailUrl(thumbnailUrl);
+        product.setDescription(binding.productDescriptionTxt.getText().toString());
         product.setPrice(Float.parseFloat(binding.productPriceTxt.getText().toString()));
         productViewModel.insert(product);
         categoryViewModel.update(category);
