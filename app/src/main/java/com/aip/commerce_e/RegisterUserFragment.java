@@ -7,10 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -18,31 +18,24 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
-import com.aip.commerce_e.databinding.FragmentFirstBinding;
 import com.aip.commerce_e.databinding.FragmentRegisterUserBinding;
 import com.aip.commerce_e.models.User;
 import com.aip.commerce_e.models.UserViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -116,6 +109,9 @@ public class RegisterUserFragment extends Fragment {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mAuth = FirebaseAuth.getInstance();
 
+///https://stackoverflow.com/questions/4152780/mask-an-edittext-with-phone-number-format-nan-like-in-phonenumberutils
+        binding.phoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+
         binding.imageView2.setOnClickListener(view -> {
             PopupMenu popup = new PopupMenu(binding.getRoot().getContext(), view);
             //Inflating the Popup using xml file
@@ -160,10 +156,12 @@ public class RegisterUserFragment extends Fragment {
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(binding.getRoot().getContext(), "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(binding.getRoot().getContext(), task.getException().getMessage(),
+                                Toast.LENGTH_LONG).show();
+
                     }
                 });
+
     }
     public void insertUser( String url, String uuid){
         User user = new User();
@@ -174,6 +172,7 @@ public class RegisterUserFragment extends Fragment {
         user.setRole(binding.spnRoles.getSelectedItem().toString());
         user.setImageUrl(url);
         user.setUIdFirebase(uuid);
+        user.setPhone(binding.phoneNumber.getText().toString());
         userViewModel.insert(user);
         clear();
     }
@@ -211,7 +210,7 @@ public class RegisterUserFragment extends Fragment {
 
     public Boolean validate(){
         if (binding.emailtxt.getText().toString().isEmpty() || binding.userNametxt.getText().toString().isEmpty() || binding.lastNametxt.getText().toString().isEmpty()
-        || binding.passConfirm1.getText().toString().isEmpty() || binding.passConfirm2.getText().toString().isEmpty()){
+        || binding.passConfirm1.getText().toString().isEmpty() || binding.passConfirm2.getText().toString().isEmpty() || binding.phoneNumber.getText().toString().isEmpty()){
             Toast.makeText(binding.getRoot().getContext(), "Must fill all fields", Toast.LENGTH_SHORT).show();
             return false;
         }
