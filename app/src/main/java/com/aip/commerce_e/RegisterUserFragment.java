@@ -139,7 +139,6 @@ public class RegisterUserFragment extends Fragment {
 
     }
     public void registerFirebase(){
-        //AtomicReference<Boolean> status = new AtomicReference<>(false);
         mAuth.createUserWithEmailAndPassword(binding.emailtxt.getText().toString(), binding.passConfirm2.getText().toString())
                 .addOnCompleteListener((Activity) binding.getRoot().getContext(), task -> {
                     if (task.isSuccessful()) {
@@ -149,17 +148,16 @@ public class RegisterUserFragment extends Fragment {
                         Toast.makeText(binding.getRoot().getContext(), "Registered.",
                                 Toast.LENGTH_SHORT).show();
                         uploadFile(user.getUid());
-                        //status.set(true);
 
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w("TAG", "createUserWithEmail:failure", task.getException());
                         Toast.makeText(binding.getRoot().getContext(), task.getException().getMessage(),
                                 Toast.LENGTH_LONG).show();
-                        //status.set(false);
+
                     }
                 });
-        //return status.get();
+
     }
     public void insertUser( String url, String uuid){
         User user = new User();
