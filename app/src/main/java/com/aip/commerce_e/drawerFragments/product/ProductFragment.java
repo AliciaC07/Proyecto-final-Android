@@ -16,11 +16,9 @@ import com.aip.commerce_e.RecyclerViewInterface;
 import com.aip.commerce_e.databinding.FragmentCategoryBinding;
 import com.aip.commerce_e.databinding.FragmentProductBinding;
 import com.aip.commerce_e.drawerFragments.category.CategoryFragment;
-import com.aip.commerce_e.models.CategoryProduct;
-import com.aip.commerce_e.models.CategoryViewModel;
-import com.aip.commerce_e.models.Product;
-import com.aip.commerce_e.models.ProductViewModel;
+import com.aip.commerce_e.models.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -40,15 +38,24 @@ public class ProductFragment extends Fragment implements RecyclerViewInterface {
         binding = FragmentProductBinding.inflate(inflater, container, false);
         mViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
         productListAdapter = new ProductListAdapter(null, this);
-        mViewModel.findAllActive(true).observe(getViewLifecycleOwner(),
-                products1 -> productListAdapter.setProducts(products1));
+        if (getArguments() != null){
+            Category category = (Category) getArguments().get("productsCategory");
+            try {
+
+                mViewModel.getProductsByCategory(category.getId()).observe(getViewLifecycleOwner(),products1 -> {
+                    productListAdapter.setProducts(products1);
+                });
+            } catch (ExecutionException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }else {
+            mViewModel.findAllActive(true).observe(getViewLifecycleOwner(),
+                    products1 -> productListAdapter.setProducts(products1));
+        }
         binding.productRcv.setLayoutManager(new LinearLayoutManager(this.getContext()));
         binding.productRcv.setAdapter(productListAdapter);
-//        Product p = new Product();
-//        p.setPrice(50.78f);
-//        p.setName("T-shirt Hombre Under Armor");
-//        p.setCategoryId(1);
-//        mViewModel.insert(p);
         if (MainActivity.userLogged.getRole().equalsIgnoreCase("User")){
             binding.addProductFab.setVisibility(View.INVISIBLE);
         }

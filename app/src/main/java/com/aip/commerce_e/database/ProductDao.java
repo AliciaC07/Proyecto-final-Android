@@ -30,4 +30,7 @@ public interface ProductDao {
     @Query("SELECT * from product_table WHERE active = :status ORDER BY price ASC")
     LiveData<List<Product>> getAllActiveProducts(boolean status);
 
+    @Query("SELECT * FROM product_table WHERE active = :status and categoryId = :categoryId")
+    LiveData<List<Product>> getProductsByCategoryId(boolean status, Integer categoryId);
+
 }
