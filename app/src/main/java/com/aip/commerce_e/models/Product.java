@@ -23,7 +23,7 @@ public class Product implements Serializable {
     private String name;
     private Float price;
     // poner descripción
-
+    private String description;
     @ColumnInfo(name = "categoryId")
     private Integer categoryId;
     private String photosId;

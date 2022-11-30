@@ -16,10 +16,13 @@ import com.aip.commerce_e.RecyclerViewInterface;
 import com.aip.commerce_e.databinding.FragmentCategoryBinding;
 import com.aip.commerce_e.databinding.FragmentProductBinding;
 import com.aip.commerce_e.drawerFragments.category.CategoryFragment;
+import com.aip.commerce_e.models.CategoryProduct;
+import com.aip.commerce_e.models.CategoryViewModel;
 import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.models.ProductViewModel;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ProductFragment extends Fragment implements RecyclerViewInterface {
 

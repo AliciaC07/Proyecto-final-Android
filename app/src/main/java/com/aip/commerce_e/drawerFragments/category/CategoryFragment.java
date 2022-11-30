@@ -99,6 +99,9 @@ public class CategoryFragment extends Fragment implements RecyclerViewInterface 
 
     @Override
     public void navigateOnClick(int pos) {
+        if(categoryViewModel == null){
+            categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
+        }
 
     }
 }
