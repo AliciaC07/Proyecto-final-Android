@@ -47,6 +47,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             holder.editBtn.setVisibility(View.INVISIBLE);
         }
         if(products != null){
+            holder.productId.setText(product.getId());
             holder.productName.setText(product.getName());
             holder.productPrice.setText("$"+product.getPrice().toString());
             if (product.getThumbnailUrl()!= null)
@@ -68,12 +69,13 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     }
     static class ProductViewHolder extends RecyclerView.ViewHolder{
         ImageView productImg;
-        TextView productPrice, productName;
+        TextView productPrice, productName, productId;
         ImageButton editBtn, deleteBtn;
         LinearLayoutCompat card;
 
         public ProductViewHolder(@NonNull @NotNull View itemView, RecyclerViewInterface recyclerViewInterface) {
             super(itemView);
+            productId = itemView.findViewById(R.id.product_id);
             productImg = itemView.findViewById(R.id.product_img);
             productName = itemView.findViewById(R.id.product_name);
             productPrice = itemView.findViewById(R.id.product_price);

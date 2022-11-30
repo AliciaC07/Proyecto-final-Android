@@ -25,7 +25,7 @@ public class ProductViewFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         storage = FirebaseStorage.getInstance();
@@ -39,8 +39,11 @@ public class ProductViewFragment extends Fragment {
         if(getArguments()!=null){
             product = (Product) getArguments().getSerializable("product");
             downloadImgs();
+            assert binding.idTag != null;
+            binding.idTag.setText("# " + product.getId());
+            binding.descriptionTag.setText(product.getDescription());
             binding.nameTag.setText(product.getName());
-            binding.priceTag.setText("$ "+product.getPrice());
+            binding.priceTag.setText("$ " + product.getPrice());
         }
         super.onViewCreated(view, savedInstanceState);
     }
