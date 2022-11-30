@@ -1,6 +1,8 @@
 package com.aip.commerce_e.drawerFragments.product;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,8 @@ import com.aip.commerce_e.MainActivity;
 import com.aip.commerce_e.R;
 import com.aip.commerce_e.RecyclerViewInterface;
 import com.aip.commerce_e.models.Product;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,12 +51,18 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             holder.editBtn.setVisibility(View.INVISIBLE);
         }
         if(products != null){
-            holder.productId.setText("ID: " + product.getId().toString());
+            holder.productId.setText("ID: " + product.getId());
             holder.productName.setText(product.getName());
             holder.productPrice.setText("$"+product.getPrice().toString());
-            if (product.getThumbnailUrl()!= null)
-                Picasso.get().load(Uri.parse(product.getThumbnailUrl()))
-                        .into(holder.productImg);
+            if (product.getThumbnailUrl()!= null){
+
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                        .child("products/"+product.getPhotosId()+"/"+product.getThumbnailUrl());
+                storageReference.getBytes(IMG_SIZE).addOnSuccessListener(bytes -> {
+                    Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    holder.productImg.setImageBitmap(bm);
+                });
+            }
         }
     }
 

@@ -18,7 +18,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.content.ContextCompat;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,24 +27,23 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import com.aip.commerce_e.R;
 import com.aip.commerce_e.databinding.FragmentCreateProductBinding;
-import com.aip.commerce_e.drawerFragments.category.actions.CreateCategoryFragment;
 import com.aip.commerce_e.models.Category;
 import com.aip.commerce_e.models.CategoryViewModel;
 import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.models.ProductViewModel;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.storage.*;
 import com.squareup.picasso.Picasso;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -54,8 +53,11 @@ public class CreateProductFragment extends Fragment {
     FragmentCreateProductBinding binding;
     ProductViewModel productViewModel;
     CategoryViewModel categoryViewModel;
-    private StorageTask UploadTask;
+    private StorageTask<com.google.firebase.storage.UploadTask.TaskSnapshot> UploadTask;
+    private List<StorageTask<com.google.firebase.storage.UploadTask.TaskSnapshot>> tasks;
     private String thumbnail = "";
+    List<Task<Uri>> myImgs;
+    Task<Uri> img;
     private Product aux;
     ArrayList<Uri> imageUris  = new ArrayList<>();
     boolean selectedImage = false;
@@ -228,18 +230,14 @@ public class CreateProductFragment extends Fragment {
 
     private void uploadFile(String uuid, Uri imageUri, boolean isLast, boolean isFirst) {
         if (imageUri != null) {
-
+            String imgUuid = UUID.randomUUID().toString();
             // Defining the child of storageReference
-            StorageReference myref = storageReference.child("products/"+uuid+"/"+ UUID.randomUUID().toString());
-
-            UploadTask = myref.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+            StorageReference myref = storageReference.child("products/"+uuid+"/"+ imgUuid);
+            StorageTask<com.google.firebase.storage.UploadTask.TaskSnapshot> uploadTask = myref.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
 //                        Handler handler = new Handler();
 //                        handler.postDelayed(() -> binding.categoryProgressBar.setProgress(0), 500);
                         if(isFirst)
-                            myref.getDownloadUrl().addOnSuccessListener(uri -> {
-                                thumbnail = uri.toString();
-                                Log.i("Download url", thumbnail);
-                            });
+                            thumbnail = imgUuid;
                         if(isLast)
                             insertProduct(uuid, thumbnail);
                             //ref.getDownloadUrl().addOnSuccessListener(uri -> insertCategory(uri.toString(), uuid));
