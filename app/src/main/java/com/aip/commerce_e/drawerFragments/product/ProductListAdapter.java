@@ -47,7 +47,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             holder.editBtn.setVisibility(View.INVISIBLE);
         }
         if(products != null){
-            holder.productId.setText(product.getId());
+            holder.productId.setText("ID: " + product.getId().toString());
             holder.productName.setText(product.getName());
             holder.productPrice.setText("$"+product.getPrice().toString());
             if (product.getThumbnailUrl()!= null)
