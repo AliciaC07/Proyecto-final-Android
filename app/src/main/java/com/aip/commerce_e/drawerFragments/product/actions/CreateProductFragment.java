@@ -233,11 +233,11 @@ public class CreateProductFragment extends Fragment {
             String imgUuid = UUID.randomUUID().toString();
             // Defining the child of storageReference
             StorageReference myref = storageReference.child("products/"+uuid+"/"+ imgUuid);
+            if(isFirst)
+                thumbnail = imgUuid;
             StorageTask<com.google.firebase.storage.UploadTask.TaskSnapshot> uploadTask = myref.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
 //                        Handler handler = new Handler();
 //                        handler.postDelayed(() -> binding.categoryProgressBar.setProgress(0), 500);
-                        if(isFirst)
-                            thumbnail = imgUuid;
                         if(isLast)
                             insertProduct(uuid, thumbnail);
                             //ref.getDownloadUrl().addOnSuccessListener(uri -> insertCategory(uri.toString(), uuid));

@@ -44,7 +44,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull @NotNull ProductViewHolder holder, int position) {
-        final long IMG_SIZE = 3024*3024;
+        final long IMG_SIZE = 3840*2160;
         Product product = products.get(position);
         if(MainActivity.userLogged.getRole().equalsIgnoreCase("User")){
             holder.deleteBtn.setVisibility(View.INVISIBLE);
