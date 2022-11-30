@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -108,6 +109,9 @@ public class RegisterUserFragment extends Fragment {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mAuth = FirebaseAuth.getInstance();
 
+///https://stackoverflow.com/questions/4152780/mask-an-edittext-with-phone-number-format-nan-like-in-phonenumberutils
+        binding.phoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+
         binding.imageView2.setOnClickListener(view -> {
             PopupMenu popup = new PopupMenu(binding.getRoot().getContext(), view);
             //Inflating the Popup using xml file
@@ -168,6 +172,7 @@ public class RegisterUserFragment extends Fragment {
         user.setRole(binding.spnRoles.getSelectedItem().toString());
         user.setImageUrl(url);
         user.setUIdFirebase(uuid);
+        user.setPhone(binding.phoneNumber.getText().toString());
         userViewModel.insert(user);
         clear();
     }
@@ -205,7 +210,7 @@ public class RegisterUserFragment extends Fragment {
 
     public Boolean validate(){
         if (binding.emailtxt.getText().toString().isEmpty() || binding.userNametxt.getText().toString().isEmpty() || binding.lastNametxt.getText().toString().isEmpty()
-        || binding.passConfirm1.getText().toString().isEmpty() || binding.passConfirm2.getText().toString().isEmpty()){
+        || binding.passConfirm1.getText().toString().isEmpty() || binding.passConfirm2.getText().toString().isEmpty() || binding.phoneNumber.getText().toString().isEmpty()){
             Toast.makeText(binding.getRoot().getContext(), "Must fill all fields", Toast.LENGTH_SHORT).show();
             return false;
         }

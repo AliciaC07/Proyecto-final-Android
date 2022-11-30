@@ -25,5 +25,6 @@ public class User implements Serializable {
     private String uIdFirebase;
     private String role;
     private String imageUrl;
+    private String phone;
     private Boolean active = true;
 }
