@@ -1,28 +1,22 @@
 package com.aip.commerce_e;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
-import android.view.Gravity;
+import android.view.Menu;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 import com.aip.commerce_e.models.User;
 import com.aip.commerce_e.models.UserViewModel;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import androidx.navigation.NavController;
@@ -31,15 +25,14 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.aip.commerce_e.databinding.ActivityMainBinding;
 
-import android.view.Menu;
 import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
-import org.jetbrains.annotations.NotNull;
+import lombok.val;
 
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
+
+import static androidx.navigation.fragment.FragmentKt.findNavController;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -104,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
+
         View headerView = navigationView.getHeaderView(0);
         ImageView imageView = headerView.findViewById(R.id.userImg);
         TextView username = headerView.findViewById(R.id.username);
@@ -145,15 +139,46 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id){
+            case R.id.search:
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setMessage("Select option for the search");
+                NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+                alertDialogBuilder.setPositiveButton("Product",
+                        (arg0, arg1) -> {
+                            navController.navigate(R.id.searchProductFragment);
+
+                        }
+                );
+
+                alertDialogBuilder.setNegativeButton("Category", (dialog, which) -> {
+                            navController.navigate(R.id.searchCategoryFragment);
+
+                        }
+                        );
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                break;
+            case R.id.notifications:
+                Toast.makeText(binding.getRoot().getContext(), "Notifications touched", Toast.LENGTH_SHORT).show();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
 
     @Override
     public void onBackPressed() {

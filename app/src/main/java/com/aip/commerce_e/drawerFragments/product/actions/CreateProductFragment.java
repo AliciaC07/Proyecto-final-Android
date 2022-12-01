@@ -169,6 +169,7 @@ public class CreateProductFragment extends Fragment {
                                 // select first image from bunch
                                 binding.productImagePicker.setImageURI(imageUri);
                             }
+                            imageUris.add(imageUri);
                         }
                     }
                 }

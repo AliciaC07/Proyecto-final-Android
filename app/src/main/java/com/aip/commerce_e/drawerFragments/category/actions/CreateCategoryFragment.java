@@ -103,11 +103,12 @@ public class CreateCategoryFragment extends Fragment {
 
         binding.btnRegisterCategory.setOnClickListener(view -> {
             if(!isEdit){
-                if(!binding.categoryNameTxt.getText().toString().equals(""))
+                if(validate() || validateImage())
                     uploadFile(UUID.randomUUID().toString());
             }else{
-                if(validate() && aux.getImageUrl()!=null)
+                if(validate() && aux.getImageUrl()!=null){
                     updateFile(aux.getUIdFirebase());
+                }
             }
         });
         return binding.getRoot();
@@ -121,6 +122,13 @@ public class CreateCategoryFragment extends Fragment {
 
         return true;
 
+    }
+    public Boolean validateImage(){
+        if (imageUri == null){
+            Toast.makeText(binding.getRoot().getContext(), "Must select an image", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     void imageChooser(String type) {
@@ -173,7 +181,7 @@ public class CreateCategoryFragment extends Fragment {
 //                        binding.categoryProgressBar.setProgress((int) progress);
 //                    });
         } else {
-            Toast.makeText(binding.getRoot().getContext(), "No file selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(binding.getRoot().getContext(), "No image selected", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -46,36 +46,47 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("e-commerce", Context.MODE_PRIVATE);
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAuth.signInWithEmailAndPassword(binding.username.getText().toString(), binding.password.getText().toString())
-                        .addOnCompleteListener((Activity) binding.getRoot().getContext(), task -> {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d("TAG", "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Toast.makeText(binding.getRoot().getContext(), "Logueado "+ user.getEmail(), Toast.LENGTH_SHORT).show();
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString("email", user.getEmail());
-                                editor.apply();
-                                Intent intent = new Intent(getContext(), MainActivity.class);
-                                startActivity(intent);
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                Toast.makeText(binding.getRoot().getContext(), "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
+        //SharedPreferences sharedPreferences = getContext().getSharedPreferences("e-commerce", Context.MODE_PRIVATE);
+        binding.btnLogin.setOnClickListener(view12 -> {
+            if (validate()){
+                login();
+            }else {
+                Toast.makeText(binding.getRoot().getContext(), "Must fill all fields", Toast.LENGTH_SHORT).show();
             }
         });
         binding.btnRegister.setOnClickListener(view1 -> {
             NavHostFragment.findNavController(FirstFragment.this)
                     .navigate(R.id.registerUserFragment2);
         });
+    }
+    public Boolean validate(){
+        if (binding.username.getText().toString().isEmpty() || binding.password.getText().toString().isEmpty()){
+            return false;
+        }
+        return  true;
+    }
+
+    public void login(){
+        mAuth.signInWithEmailAndPassword(binding.username.getText().toString(), binding.password.getText().toString())
+                .addOnCompleteListener((Activity) binding.getRoot().getContext(), task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("TAG", "signInWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        //Toast.makeText(binding.getRoot().getContext(), "Logueado "+ user.getEmail(), Toast.LENGTH_SHORT).show();
+                        //SharedPreferences.Editor editor = sharedPreferences.edit();
+                       // editor.putString("email", user.getEmail());
+                        //editor.apply();
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        startActivity(intent);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("TAG", "signInWithEmail:failure", task.getException());
+                        Toast.makeText(binding.getRoot().getContext(), task.getException().getMessage(),
+                                Toast.LENGTH_LONG).show();
+
+                    }
+                });
     }
     @Override
     public void onStart() {

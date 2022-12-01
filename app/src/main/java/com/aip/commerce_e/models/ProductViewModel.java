@@ -45,4 +45,7 @@ public class ProductViewModel extends AndroidViewModel {
     public LiveData<List<Product>> getProductsByCategory(Integer id) throws ExecutionException, InterruptedException {
         return productRepository.getAllProductsByCategoryId(id);
     }
+    public List<Product> getAllActiveProductsAsync() throws ExecutionException, InterruptedException {
+        return productRepository.getAllActiveProductsAsync();
+    }
 }
