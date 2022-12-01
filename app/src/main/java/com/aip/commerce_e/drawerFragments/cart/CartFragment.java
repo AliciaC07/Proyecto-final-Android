@@ -9,7 +9,7 @@ import com.aip.commerce_e.R;
 import com.aip.commerce_e.databinding.FragmentCartBinding;
 import org.jetbrains.annotations.NotNull;
 
-public class CartFragment extends Fragment {
+public class CartFragment extends Fragment implements CartRCVInterface {
     FragmentCartBinding binding;
 
     @Override
@@ -23,5 +23,25 @@ public class CartFragment extends Fragment {
         binding = FragmentCartBinding.inflate(inflater, container, false);
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void decreaseQuantity(Integer pos) {
+
+    }
+
+    @Override
+    public void increaseQuantity(Integer pos) {
+
+    }
+
+    @Override
+    public void deleteFromCart(Integer pos) {
+
+    }
+
+    @Override
+    public void navigateOnClick(Integer pos) {
+
     }
 }
