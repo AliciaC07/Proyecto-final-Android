@@ -31,6 +31,9 @@ public interface CategoryDao {
     @Query("SELECT * from category_table WHERE active = :status ORDER BY name ASC")
     LiveData<List<Category>> getAllActiveCategory(Boolean status);
 
+    @Query("SELECT * from category_table WHERE active = :status ORDER BY name ASC")
+    List<Category> getActiveAllCategories(Boolean status);
+
     @Transaction
     @Query("SELECT * FROM category_table")
     public List<CategoryProduct> getCategoryProducts();

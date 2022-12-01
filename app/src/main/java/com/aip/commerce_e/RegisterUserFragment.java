@@ -149,8 +149,8 @@ public class RegisterUserFragment extends Fragment {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("TAG", "createUserWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(binding.getRoot().getContext(), "Registered.",
-                                Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(binding.getRoot().getContext(), "Registered.",
+//                                Toast.LENGTH_SHORT).show();
                         uploadFile(user.getUid());
 
                     } else {

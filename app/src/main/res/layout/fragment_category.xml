@@ -11,9 +11,12 @@
             android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/category_rcv"/>
+                android:layout_width="418dp"
+                android:layout_height="0dp"
+                android:id="@+id/category_rcv"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:src="@drawable/ic_baseline_add_category_24"
                 android:layout_width="wrap_content"

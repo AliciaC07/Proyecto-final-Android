@@ -56,6 +56,9 @@ public class CategoryRepository {
     public List<CategoryProduct> getCategoryWithProducts() throws ExecutionException, InterruptedException {
         return new getAllCategoryProducts(categoryDao).execute().get();
     }
+    public List<Category> getActiveAllCategories() throws ExecutionException, InterruptedException {
+        return new getActiveAllCategoriesAsync(categoryDao).execute().get();
+    }
     public Category findById(Integer id) throws ExecutionException, InterruptedException {
         return new findById(categoryDao).execute(id).get();
     }
@@ -77,6 +80,16 @@ public class CategoryRepository {
         @Override
         protected List<CategoryProduct> doInBackground(Void... emails) {
             List<CategoryProduct> categoryProducts = asyncCategoryDao.getCategoryProducts();
+            return categoryProducts;
+        }
+    }
+    private static class getActiveAllCategoriesAsync extends AsyncTask<Void, Void, List<Category>> {
+        private CategoryDao asyncCategoryDao;
+
+        getActiveAllCategoriesAsync(CategoryDao asyncCategoryDao){ this.asyncCategoryDao = asyncCategoryDao; }
+        @Override
+        protected List<Category> doInBackground(Void... emails) {
+            List<Category> categoryProducts = asyncCategoryDao.getActiveAllCategories(true);
             return categoryProducts;
         }
     }

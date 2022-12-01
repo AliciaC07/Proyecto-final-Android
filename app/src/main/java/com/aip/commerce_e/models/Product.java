@@ -32,4 +32,8 @@ public class Product implements Serializable {
     @ColumnInfo(defaultValue = "true")
     private Boolean active = true;
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

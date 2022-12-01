@@ -52,6 +52,21 @@ public class ProductRepository {
     public LiveData<List<Product>> getAllProductsByCategoryId(Integer id) throws ExecutionException, InterruptedException {
         return new ProductRepository.findProductsByCategory(productDao).execute(id).get();
     }
+    public List<Product> getAllActiveProductsAsync() throws ExecutionException, InterruptedException {
+        return new ProductRepository.findAllProductsActiveAsync(productDao).execute().get();
+    }
+
+
+    private static class findAllProductsActiveAsync extends AsyncTask<Void, Void, List<Product>> {
+
+        private ProductDao asyncProductDao;
+        findAllProductsActiveAsync(ProductDao asyncProductDao){this.asyncProductDao = asyncProductDao;}
+        @Override
+        protected List<Product> doInBackground(Void... ids) {
+            return asyncProductDao.getAllActiveProductsSearch(true);
+        }
+    }
+
 
     private static class findProductsByCategory extends AsyncTask<Integer, Void, LiveData<List<Product>>> {
 
