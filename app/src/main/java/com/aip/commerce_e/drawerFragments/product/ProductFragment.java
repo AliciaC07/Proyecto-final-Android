@@ -1,5 +1,7 @@
 package com.aip.commerce_e.drawerFragments.product;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -17,6 +19,7 @@ import com.aip.commerce_e.databinding.FragmentCategoryBinding;
 import com.aip.commerce_e.databinding.FragmentProductBinding;
 import com.aip.commerce_e.drawerFragments.category.CategoryFragment;
 import com.aip.commerce_e.models.*;
+import com.aip.commerce_e.notification.NotificationCreate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,4 +98,5 @@ public class ProductFragment extends Fragment implements RecyclerViewInterface {
         NavHostFragment.findNavController(ProductFragment.this)
                 .navigate(R.id.productViewFragment, bundle);
     }
+
 }

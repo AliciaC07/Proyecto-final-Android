@@ -9,5 +9,11 @@
           app:showAsAction="always"/>
     <item android:id="@+id/search"
           android:orderInCategory="100"
-          app:showAsAction="always" android:icon="@drawable/baseline_search_24" android:title="TODO"/>
+          app:showAsAction="always"
+          android:icon="@drawable/baseline_search_24"
+          android:title="TODO"/>
+    <item android:title="Item"
+          android:id="@+id/cart"
+          android:icon="@drawable/baseline_shopping_cart_24"
+          app:showAsAction="always"/>
 </menu>

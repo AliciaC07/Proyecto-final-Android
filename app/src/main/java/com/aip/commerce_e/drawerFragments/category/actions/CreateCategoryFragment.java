@@ -103,7 +103,7 @@ public class CreateCategoryFragment extends Fragment {
 
         binding.btnRegisterCategory.setOnClickListener(view -> {
             if(!isEdit){
-                if(validate() || validateImage())
+                if(validate())
                     uploadFile(UUID.randomUUID().toString());
             }else{
                 if(validate() && aux.getImageUrl()!=null){

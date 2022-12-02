@@ -53,11 +53,6 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-//        Bundle re = getArguments();
-//        userLogged = (User) re.get("user");
-
-        Log.i("email de la crt", email);
-        //userLogged = findUserLogged(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         try {
             userLogged = userViewModel.findUserByEmail(email);
         } catch (ExecutionException | InterruptedException e) {
