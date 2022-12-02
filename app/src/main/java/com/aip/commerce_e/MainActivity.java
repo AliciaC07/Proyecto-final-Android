@@ -14,6 +14,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
+import com.aip.commerce_e.models.CartProduct;
+import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.models.User;
 import com.aip.commerce_e.models.UserViewModel;
 import com.google.android.material.navigation.NavigationView;
@@ -30,6 +32,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 import lombok.val;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static androidx.navigation.fragment.FragmentKt.findNavController;
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private  String email = "12345@gmail.com";
     public static User userLogged;
+    public static List<CartProduct> cart;
     private FirebaseAuth mAuth;
 
     @SuppressLint({"ResourceType", "NonConstantResourceId"})
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        cart = new ArrayList<>();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         mAuth = FirebaseAuth.getInstance();
         email = mAuth.getCurrentUser().getEmail();
@@ -84,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_product:
                     navController.navigate(R.id.productFragment);
                     break;
+                case R.id.nav_cart:
+                    navController.navigate(R.id.cartFragment);
+                    break;
                 case R.id.nav_logout:
                     FirebaseAuth.getInstance().signOut();
                     Intent intent = new Intent(this, LoginActivity.class);
@@ -93,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
             if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
             }
-            Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return false;
         });
 
@@ -106,10 +114,30 @@ public class MainActivity extends AppCompatActivity {
                 .into(imageView);
         username.setText(userLogged.getName()+" "+userLogged.getLastName());
         emailUser.setText(userLogged.getEmail());
+    }
 
+    public static Double subTotal(){
+        Double sum = 0d;
+        for (CartProduct product : cart) {
+            sum += product.getProduct().getPrice()* product.getQuantity();
+        }
+        return sum;
+    }
+    public static Integer cartSize(){
+        Integer sum = 0;
+        for (CartProduct product : cart) {
+            sum += product.getQuantity();
+        }
+        return sum;
+    }
 
+    public static Integer hasProduct(Product product){
 
-
+        for(int i= 0; i < cart.size(); i ++){
+            if(cart.get(i).getProduct().getId().equals(product.getId()))
+                return i;
+        }
+        return -1;
     }
 
 //    @Override

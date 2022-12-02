@@ -1,6 +1,7 @@
 package com.aip.commerce_e.drawerFragments.product.actions;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,7 +9,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.aip.commerce_e.MainActivity;
 import com.aip.commerce_e.databinding.FragmentProductViewBinding;
+import com.aip.commerce_e.models.CartProduct;
 import com.aip.commerce_e.models.Product;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -34,6 +37,7 @@ public class ProductViewFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         if(getArguments()!=null){
@@ -43,6 +47,15 @@ public class ProductViewFragment extends Fragment {
             binding.descriptionTag.setText(product.getDescription());
             binding.nameTag.setText(product.getName());
             binding.priceTag.setText("$ " + product.getPrice());
+            binding.addToCart.setOnClickListener(view1 -> {
+                Integer pos = MainActivity.hasProduct(product);
+                if (pos >= 0){
+                    Integer quant = MainActivity.cart.get(pos).getQuantity();
+                    MainActivity.cart.get(pos).setQuantity(quant+1);
+                }else{
+                    MainActivity.cart.add(new CartProduct(product, 1));
+                }
+            });
         }
         super.onViewCreated(view, savedInstanceState);
     }
