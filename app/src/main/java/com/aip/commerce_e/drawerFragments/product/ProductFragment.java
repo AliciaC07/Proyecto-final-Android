@@ -2,6 +2,7 @@ package com.aip.commerce_e.drawerFragments.product;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.widget.Toast;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -86,7 +87,10 @@ public class ProductFragment extends Fragment implements RecyclerViewInterface {
     @Override
     public void deleteOnclick(int pos) {
         Product product = productListAdapter.products.get(pos);
-        mViewModel.deleteById(product.getId());
+        if(!product.isUsed())
+            mViewModel.deleteById(product.getId());
+        else
+            Toast.makeText(getContext(), "This product cannot be deleted", Toast.LENGTH_SHORT).show();
     }
 
     @Override
