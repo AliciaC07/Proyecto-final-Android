@@ -4,7 +4,10 @@ package com.aip.commerce_e.drawerFragments.product.actions;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,19 +21,24 @@ import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.notification.NotificationCreate;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.owlike.genson.GenericType;
+import com.owlike.genson.Genson;
 import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ProductViewFragment extends Fragment {
     FragmentProductViewBinding binding;
+    Integer quantity;
     FirebaseStorage storage;
     StorageReference storageReference;
     Product product;
     String CHANNEL_ID = "Notification.Add";
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,6 +46,10 @@ public class ProductViewFragment extends Fragment {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         binding = FragmentProductViewBinding.inflate(inflater, container, false);
+        quantity = 1;
+        binding.productQuantity.setText(quantity.toString());
+        binding.productQuantityUp.setOnClickListener(this::increaseQuantity);
+        binding.productQuantityDown.setOnClickListener(this::decreaseQuantity);
         notificationChannel();
         return binding.getRoot();
     }
@@ -56,12 +68,18 @@ public class ProductViewFragment extends Fragment {
                 Integer pos = MainActivity.hasProduct(product);
                 if (pos >= 0){
                     Integer quant = MainActivity.cart.get(pos).getQuantity();
-                    MainActivity.cart.get(pos).setQuantity(quant+1);
+                    MainActivity.cart.get(pos).setQuantity(quant+quantity);
                     notificationAdd(product);
                 }else{
-                    MainActivity.cart.add(new CartProduct(product, 1));
+                    MainActivity.cart.add(new CartProduct(product, quantity));
                     notificationAdd(product);
                 }
+                Genson genson = new Genson();
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String jsonAux = genson.serialize(MainActivity.cart, GenericType.of(List.class));
+                editor.putString("ecommerce", jsonAux).apply();
+                Toast.makeText(getContext(),"Product added to cart", Toast.LENGTH_SHORT).show();
             });
         }
         super.onViewCreated(view, savedInstanceState);
@@ -89,6 +107,21 @@ public class ProductViewFragment extends Fragment {
         Log.i("Cantidad de fotos", String.valueOf(imageUrls.size()));*/
 
     }
+
+    @SuppressLint("SetTextI18n")
+    public void increaseQuantity(View view){
+        quantity +=1;
+        binding.productQuantity.setText(quantity.toString());
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void decreaseQuantity(View view){
+        if(quantity > 1){
+            quantity-=1;
+            binding.productQuantity.setText(quantity.toString());
+        }
+    }
+
     public void notificationChannel(){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channelCompat = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);

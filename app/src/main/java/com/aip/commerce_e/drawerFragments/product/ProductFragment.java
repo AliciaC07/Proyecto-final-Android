@@ -2,6 +2,7 @@ package com.aip.commerce_e.drawerFragments.product;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.widget.Toast;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -68,10 +69,20 @@ public class ProductFragment extends Fragment implements RecyclerViewInterface {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // create edit/create view
-        binding.addProductFab.setOnClickListener(view1 ->
-                NavHostFragment.findNavController(ProductFragment.this)
-                        .navigate(R.id.createProductFragment));
+        CategoryViewModel categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        binding.addProductFab.setOnClickListener(view1 -> {
+            categoryViewModel.findAllActive(true).observe(getViewLifecycleOwner(), categories -> {
+                if(categories.size() > 0)
+                    NavHostFragment.findNavController(ProductFragment.this)
+                            .navigate(R.id.createProductFragment);
+                else{
+                    Toast.makeText(getContext(), "A category must exist first", Toast.LENGTH_LONG).show();
+                    NavHostFragment.findNavController(ProductFragment.this)
+                            .navigate(R.id.createCategoryFragment);
+                }
+
+            });
+        });
     }
 
     @Override
@@ -86,7 +97,10 @@ public class ProductFragment extends Fragment implements RecyclerViewInterface {
     @Override
     public void deleteOnclick(int pos) {
         Product product = productListAdapter.products.get(pos);
-        mViewModel.deleteById(product.getId());
+        if(!product.isUsed())
+            mViewModel.deleteById(product.getId());
+        else
+            Toast.makeText(getContext(), "This product cannot be deleted", Toast.LENGTH_SHORT).show();
     }
 
     @Override

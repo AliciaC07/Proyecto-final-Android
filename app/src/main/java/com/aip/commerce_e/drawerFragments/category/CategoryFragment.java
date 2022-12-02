@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -92,7 +93,10 @@ public class CategoryFragment extends Fragment implements RecyclerViewInterface 
         if (categoryViewModel == null)
             categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
         Category category = categoryListAdapter.getCategories().get(pos);
-        categoryViewModel.deleteById(category.getId());
+        if (!category.getUsed())
+            categoryViewModel.deleteById(category.getId());
+        else
+            Toast.makeText(getContext(), "This category cannot be deleted", Toast.LENGTH_SHORT).show();
 
     }
 
