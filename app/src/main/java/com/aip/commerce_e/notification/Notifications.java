@@ -10,5 +10,6 @@ public class Notifications {
     private String time;
     private String title;
     private String content;
+    private String app;
 
 }
