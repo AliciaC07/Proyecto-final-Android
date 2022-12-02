@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     public ActionBarDrawerToggle drawerToggle;
+    private SharedPreferences sharedPreferences;
+    private String jsonAux = "";
     private UserViewModel userViewModel;
     private  String email = "12345@gmail.com";
     public static User userLogged;
@@ -64,9 +66,10 @@ public class MainActivity extends AppCompatActivity {
         //Gson gson = new Gson();
         Genson genson = new Genson();
 
-        SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
-        String jsonAux = sharedPreferences.getString("ecommerce","");
-        if(!jsonAux.equalsIgnoreCase("[]")) {
+        sharedPreferences = getBaseContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
+        jsonAux = sharedPreferences.getString("ecommerce","");
+        Log.i("El carrito",jsonAux);
+        if(!jsonAux.equalsIgnoreCase("[]") && !jsonAux.equalsIgnoreCase("")) {
             cart = genson.deserialize(jsonAux, new GenericType<List<CartProduct>>(){});
         }
         else
@@ -111,6 +114,11 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.nav_logout:
                     FirebaseAuth.getInstance().signOut();
+                    sharedPreferences = this.getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    cart = new ArrayList<>();
+                    String jsonAux = genson.serialize(cart, GenericType.of(List.class));
+                    editor.putString("ecommerce", jsonAux).apply();
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     break;

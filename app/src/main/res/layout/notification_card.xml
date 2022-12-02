@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:animateLayoutChanges="true"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+    <LinearLayout
+            android:id="@+id/notification_card"
+            android:orientation="horizontal"
+            android:background="#424555"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="10dp"
+                app:srcCompat="@drawable/baseline_shopping_cart_24"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+
+        <androidx.legacy.widget.Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
+
+        <LinearLayout
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/notification_title"
+                    android:layout_marginHorizontal="15sp"
+                    android:textSize="20sp"
+                    android:text="Title"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/notification_time"
+                    android:textColor="@color/white"
+                    android:text="Time"
+                    android:layout_marginHorizontal="15sp"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:id="@+id/notification_content"
+                    android:layout_marginHorizontal="15sp"
+                    android:textSize="20sp"
+                    android:text="Content"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    android:id="@+id/notification_app"
+                    android:textColor="@color/white"
+                    android:text="App"
+                    android:layout_marginHorizontal="15sp"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <androidx.legacy.widget.Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

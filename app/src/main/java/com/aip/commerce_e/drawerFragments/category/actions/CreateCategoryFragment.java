@@ -104,10 +104,13 @@ public class CreateCategoryFragment extends Fragment {
 
         binding.btnRegisterCategory.setOnClickListener(view -> {
             if(!isEdit){
-                if(validate() && validateImage())
+                if(validate() && validateImage()){
+                    Toast.makeText(getContext(), "Registering category", Toast.LENGTH_SHORT).show();
                     uploadFile(UUID.randomUUID().toString());
+                }
             }else{
                 if(validate() && aux.getImageUrl()!=null){
+                    Toast.makeText(getContext(), "Updating category", Toast.LENGTH_SHORT).show();
                     updateFile(aux.getUIdFirebase());
                 }
             }
@@ -202,6 +205,7 @@ public class CreateCategoryFragment extends Fragment {
 //                        binding.categoryProgressBar.setProgress((int) progress);
 //                    });
         } else {
+            Toast.makeText(getContext(), "Updating category", Toast.LENGTH_SHORT).show();
             //Toast.makeText(binding.getRoot().getContext(), "No file selected", Toast.LENGTH_SHORT).show();
             updateCategory(aux.getImageUrl(), aux.getUIdFirebase());
         }
