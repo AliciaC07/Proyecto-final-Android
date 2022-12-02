@@ -1,9 +1,12 @@
 package com.aip.commerce_e;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,6 +32,9 @@ import com.aip.commerce_e.databinding.ActivityMainBinding;
 
 import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.owlike.genson.GenericType;
+import com.owlike.genson.Genson;
 import com.squareup.picasso.Picasso;
 import lombok.val;
 
@@ -55,8 +61,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Gson gson = new Gson();
+        Genson genson = new Genson();
 
-        cart = new ArrayList<>();
+        SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String jsonAux = sharedPreferences.getString("ecommerce","");
+        if(!jsonAux.equalsIgnoreCase("[]")) {
+            cart = genson.deserialize(jsonAux, new GenericType<List<CartProduct>>(){});
+            Log.i("cart", jsonAux);
+        }
+        else
+            cart = new ArrayList<>();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         mAuth = FirebaseAuth.getInstance();
         email = mAuth.getCurrentUser().getEmail();
