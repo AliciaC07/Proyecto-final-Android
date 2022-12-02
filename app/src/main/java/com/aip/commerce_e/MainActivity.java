@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         Genson genson = new Genson();
 
         SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
         String jsonAux = sharedPreferences.getString("ecommerce","");
         if(!jsonAux.equalsIgnoreCase("[]")) {
             cart = genson.deserialize(jsonAux, new GenericType<List<CartProduct>>(){});
