@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
-             android:layout_height="match_parent"
+             android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
              android:background="#424555"
              tools:context=".drawerFragments.product.actions.ProductViewFragment">
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -53,13 +53,43 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-        <Button
-                android:id="@+id/add_to_cart"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center_horizontal"
-                android:text="Add to cart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <LinearLayout
+                android:layout_marginHorizontal="16dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <ImageButton
+                    android:layout_gravity="center_vertical"
+                    app:srcCompat="@drawable/ic_baseline_down_24"
+                    android:id="@+id/product_quantity_down"
+                    android:layout_width="35sp"
+                    android:layout_height="30sp"/>
+            <TextView
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/product_quantity"
+                    android:layout_marginHorizontal="10sp"
+                    android:layout_width="wrap_content"
+                    android:text="10"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content"/>
+            <ImageButton
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/product_quantity_up"
+                    app:srcCompat="@drawable/ic_baseline_up_24"
+                    android:layout_width="35sp"
+                    android:layout_height="30sp"/>
+            <Space
+                    android:layout_width="0sp"
+                    android:layout_weight="1"
+                    android:layout_height="0sp"/>
+            <Button
+                    android:id="@+id/add_to_cart"
+                    android:layout_gravity="center_vertical"
+                    android:text="Add to cart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </FrameLayout>

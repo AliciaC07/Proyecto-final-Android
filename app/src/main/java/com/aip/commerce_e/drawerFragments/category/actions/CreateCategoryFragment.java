@@ -76,6 +76,7 @@ public class CreateCategoryFragment extends Fragment {
             binding.categoryNameTxt.setText(aux.getName());
             if(aux.getImageUrl() != null) {
                 Uri categoryUri = Uri.parse(aux.getImageUrl());
+                //imageUri = categoryUri;
                 //FileDownloadTask path = storageReference.getFile(categoryUri);
                 Picasso.get().load(categoryUri).into(binding.categoryImageView);
             }
@@ -103,7 +104,7 @@ public class CreateCategoryFragment extends Fragment {
 
         binding.btnRegisterCategory.setOnClickListener(view -> {
             if(!isEdit){
-                if(validate())
+                if(validate() && validateImage())
                     uploadFile(UUID.randomUUID().toString());
             }else{
                 if(validate() && aux.getImageUrl()!=null){
@@ -119,7 +120,6 @@ public class CreateCategoryFragment extends Fragment {
             Toast.makeText(binding.getRoot().getContext(), "Must fill all fields", Toast.LENGTH_SHORT).show();
             return false;
         }
-
         return true;
 
     }

@@ -3,6 +3,8 @@ package com.aip.commerce_e.drawerFragments.cart;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -24,14 +26,18 @@ import com.aip.commerce_e.models.CartProduct;
 import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.models.ProductViewModel;
 import com.aip.commerce_e.notification.NotificationCreate;
+import com.owlike.genson.GenericType;
+import com.owlike.genson.Genson;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class CartFragment extends Fragment implements CartRCVInterface {
     FragmentCartBinding binding;
     CartListAdapter cartListAdapter;
+    Genson genson;
     ProductViewModel productViewModel;
 
     String CHANNEL_ID = "Notification.cart";
@@ -46,6 +52,8 @@ public class CartFragment extends Fragment implements CartRCVInterface {
                              Bundle savedInstanceState) {
         binding = FragmentCartBinding.inflate(inflater, container, false);
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+
+        genson = new Genson();
 
         cartListAdapter = new CartListAdapter(null, this);
         cartListAdapter.setCart(MainActivity.cart);
@@ -65,12 +73,19 @@ public class CartFragment extends Fragment implements CartRCVInterface {
         binding.checkoutBtn.setOnClickListener(view1 -> {
             for (CartProduct product: MainActivity.cart) {
                 Product product1 = product.getProduct();
-                //product.setIsUSed(true);
-                //productViewModel.update(product1);
+                product1.setUsed(true);
+                productViewModel.update(product1);
             }
             notificationAdd();
             MainActivity.cart = new ArrayList<>();
             Toast.makeText(this.getContext(), "Thank you for your purchase", Toast.LENGTH_LONG).show();
+
+            Genson genson = new Genson();
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            String jsonAux = genson.serialize(MainActivity.cart, GenericType.of(List.class));
+            editor.putString("ecommerce", jsonAux).apply();
+
             NavHostFragment.findNavController(CartFragment.this)
                     .navigate(R.id.homeFragment3);
         });
@@ -83,6 +98,11 @@ public class CartFragment extends Fragment implements CartRCVInterface {
             MainActivity.cart.get(pos).setQuantity(quant - 1);
             binding.totalText.setText("Sub Total (" + MainActivity.cartSize() + " items): $ " + MainActivity.subTotal());
             Objects.requireNonNull(binding.cartRcv.getAdapter()).notifyItemChanged(pos);
+
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            String jsonAux = genson.serialize(MainActivity.cart, GenericType.of(List.class));
+            editor.putString("ecommerce", jsonAux).apply();
         }
     }
 
@@ -93,6 +113,11 @@ public class CartFragment extends Fragment implements CartRCVInterface {
         MainActivity.cart.get(pos).setQuantity(quant+1);
         binding.totalText.setText("Sub Total ("+MainActivity.cartSize()+" items): $ "+MainActivity.subTotal());
         Objects.requireNonNull(binding.cartRcv.getAdapter()).notifyItemChanged(pos);
+
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String jsonAux = genson.serialize(MainActivity.cart, GenericType.of(List.class));
+        editor.putString("ecommerce", jsonAux).apply();
     }
 
     @SuppressLint("SetTextI18n")
@@ -101,6 +126,11 @@ public class CartFragment extends Fragment implements CartRCVInterface {
         MainActivity.cart.remove((int) pos);
         binding.totalText.setText("Sub Total ("+MainActivity.cartSize()+" items): $ "+MainActivity.subTotal());
         Objects.requireNonNull(binding.cartRcv.getAdapter()).notifyItemRemoved(pos);
+
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String jsonAux = genson.serialize(MainActivity.cart, GenericType.of(List.class));
+        editor.putString("ecommerce", jsonAux).apply();
     }
 
     @Override

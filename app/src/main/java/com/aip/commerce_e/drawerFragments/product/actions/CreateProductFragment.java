@@ -133,12 +133,22 @@ public class CreateProductFragment extends Fragment {
         });
         binding.btnRegisterProduct.setOnClickListener(view -> {
             if(isEdit){
-                updateProduct();
+                if (validForm())
+                    updateProduct();
+                else
+                    Toast.makeText(getContext(), "All fields must be filled", Toast.LENGTH_SHORT).show();
             }else {
                 // for each image upload file
-                String uuid = UUID.randomUUID().toString();
-                for(int i = 0; i < imageUris.size(); i ++){
-                    uploadFile(uuid, imageUris.get(i),i == imageUris.size()-1, i == 0);
+                if(validForm() && validateImg()){
+                    String uuid = UUID.randomUUID().toString();
+                    for(int i = 0; i < imageUris.size(); i ++){
+                        uploadFile(uuid, imageUris.get(i),i == imageUris.size()-1, i == 0);
+                    }
+                } else{
+                    if(!validateImg())
+                        Toast.makeText(getContext(), "At least 1 image must be selected", Toast.LENGTH_SHORT).show();
+                    else if(!validForm())
+                        Toast.makeText(getContext(), "All fields must be filled", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -253,28 +263,6 @@ public class CreateProductFragment extends Fragment {
             Toast.makeText(binding.getRoot().getContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
-
-    /*private void updateFile(String uuid){
-        if (imageUris != null) {
-            // Defining the child of storageReference
-            ref = storageReference.child("products/"+uuid+"/"+ UUID.randomUUID().toString());
-
-            UploadTask = ref.putFile(imageUris).addOnSuccessListener(taskSnapshot -> {
-//                        Handler handler = new Handler();
-//                        handler.postDelayed(() -> binding.categoryProgressBar.setProgress(0), 500);
-                        ref.getDownloadUrl().addOnSuccessListener(uri -> updateCategory(uri.toString(), uuid));
-                        ///Toast.makeText(binding.getRoot().getContext(), "Upload successful", Toast.LENGTH_LONG).show();
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
-//                    .addOnProgressListener(taskSnapshot -> {
-//                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-//                        binding.categoryProgressBar.setProgress((int) progress);
-//                    });
-        } else {
-            //Toast.makeText(binding.getRoot().getContext(), "No file selected", Toast.LENGTH_SHORT).show();
-            updateCategory(aux.getImageUrl(), aux.getUIdFirebase());
-        }
-    }*/
     public void updateProduct(){
         aux.setName(binding.productNameTxt.getText().toString());
         aux.setPrice(Float.parseFloat(binding.productPriceTxt.getText().toString()));
@@ -304,5 +292,15 @@ public class CreateProductFragment extends Fragment {
         //binding.categoryProgressBar.setProgress(0);
         NavHostFragment.findNavController(CreateProductFragment.this)
                 .navigate(R.id.productFragment);
+    }
+
+    private Boolean validateImg(){
+        return imageUris.size() > 0;
+    }
+
+    private Boolean validForm(){
+        return !binding.productNameTxt.getText().toString().equalsIgnoreCase("") &&
+                !binding.productPriceTxt.getText().toString().equalsIgnoreCase("") &&
+                !binding.productDescriptionTxt.getText().toString().equalsIgnoreCase("");
     }
 }
