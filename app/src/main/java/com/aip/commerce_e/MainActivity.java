@@ -32,6 +32,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 import lombok.val;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -116,12 +118,15 @@ public class MainActivity extends AppCompatActivity {
         emailUser.setText(userLogged.getEmail());
     }
 
+    /////Cambiar a 3 digitos despues del punto el total Ruben
     public static Double subTotal(){
         Double sum = 0d;
+        DecimalFormat df = new DecimalFormat("#.####");
+        df.setRoundingMode(RoundingMode.CEILING);
         for (CartProduct product : cart) {
             sum += product.getProduct().getPrice()* product.getQuantity();
         }
-        return sum;
+        return Double.parseDouble(df.format(sum).toString());
     }
     public static Integer cartSize(){
         Integer sum = 0;
@@ -196,6 +201,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.notifications:
                 Toast.makeText(binding.getRoot().getContext(), "Notifications touched", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.cart:
+                navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+                navController.navigate(R.id.cartFragment);
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);

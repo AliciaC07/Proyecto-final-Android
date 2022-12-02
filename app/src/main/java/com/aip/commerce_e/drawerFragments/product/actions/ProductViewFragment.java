@@ -2,6 +2,8 @@ package com.aip.commerce_e.drawerFragments.product.actions;
 
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +15,7 @@ import com.aip.commerce_e.MainActivity;
 import com.aip.commerce_e.databinding.FragmentProductViewBinding;
 import com.aip.commerce_e.models.CartProduct;
 import com.aip.commerce_e.models.Product;
+import com.aip.commerce_e.notification.NotificationCreate;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
@@ -25,6 +28,7 @@ public class ProductViewFragment extends Fragment {
     FirebaseStorage storage;
     StorageReference storageReference;
     Product product;
+    String CHANNEL_ID = "Notification.Add";
 
 
     @Override
@@ -34,6 +38,7 @@ public class ProductViewFragment extends Fragment {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         binding = FragmentProductViewBinding.inflate(inflater, container, false);
+        notificationChannel();
         return binding.getRoot();
     }
 
@@ -52,8 +57,10 @@ public class ProductViewFragment extends Fragment {
                 if (pos >= 0){
                     Integer quant = MainActivity.cart.get(pos).getQuantity();
                     MainActivity.cart.get(pos).setQuantity(quant+1);
+                    notificationAdd(product);
                 }else{
                     MainActivity.cart.add(new CartProduct(product, 1));
+                    notificationAdd(product);
                 }
             });
         }
@@ -81,5 +88,18 @@ public class ProductViewFragment extends Fragment {
         /*adapter.setImgUrls(imageUrls);
         Log.i("Cantidad de fotos", String.valueOf(imageUrls.size()));*/
 
+    }
+    public void notificationChannel(){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channelCompat = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
+            channelCompat.setShowBadge(true);
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channelCompat);
+        }
+    }
+
+    public void notificationAdd(Product product){
+        NotificationCreate notificationCreate = new NotificationCreate("Product added to cart", "Product "+ product.getName()+" added to cart");
+        notificationCreate.notificationAdd(binding.getRoot().getContext(), CHANNEL_ID);
     }
 }

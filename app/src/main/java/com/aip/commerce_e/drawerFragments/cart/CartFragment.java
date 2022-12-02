@@ -1,9 +1,15 @@
 package com.aip.commerce_e.drawerFragments.cart;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationChannelCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +23,7 @@ import com.aip.commerce_e.databinding.FragmentCartBinding;
 import com.aip.commerce_e.models.CartProduct;
 import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.models.ProductViewModel;
+import com.aip.commerce_e.notification.NotificationCreate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,6 +33,8 @@ public class CartFragment extends Fragment implements CartRCVInterface {
     FragmentCartBinding binding;
     CartListAdapter cartListAdapter;
     ProductViewModel productViewModel;
+
+    String CHANNEL_ID = "Notification.cart";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,10 +50,11 @@ public class CartFragment extends Fragment implements CartRCVInterface {
         cartListAdapter = new CartListAdapter(null, this);
         cartListAdapter.setCart(MainActivity.cart);
 
-        binding.totalText.setText("Sub Total ("+MainActivity.cartSize()+" items): $ "+MainActivity.subTotal());
+        binding.totalText.setText("Sub Total ("+MainActivity.cartSize()+" items): "+MainActivity.subTotal()+" $");
 
         binding.cartRcv.setLayoutManager(new LinearLayoutManager(this.getContext()));
         binding.cartRcv.setAdapter(cartListAdapter);
+       notificationChannel();
 
         return binding.getRoot();
     }
@@ -58,8 +68,9 @@ public class CartFragment extends Fragment implements CartRCVInterface {
                 //product.setIsUSed(true);
                 //productViewModel.update(product1);
             }
+            notificationAdd();
             MainActivity.cart = new ArrayList<>();
-            Toast.makeText(this.getContext(), "Gracias por su compra", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getContext(), "Thank you for your purchase", Toast.LENGTH_LONG).show();
             NavHostFragment.findNavController(CartFragment.this)
                     .navigate(R.id.homeFragment3);
         });
@@ -95,5 +106,18 @@ public class CartFragment extends Fragment implements CartRCVInterface {
     @Override
     public void navigateOnClick(Integer pos) {
 
+    }
+
+    public void notificationChannel(){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channelCompat = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channelCompat);
+        }
+    }
+
+    public void notificationAdd(){
+        NotificationCreate notificationCreate = new NotificationCreate("Purchase made", "The purchase was completed. Your total: "+MainActivity.subTotal() +" $");
+        notificationCreate.notificationAdd(binding.getRoot().getContext(), CHANNEL_ID);
     }
 }
