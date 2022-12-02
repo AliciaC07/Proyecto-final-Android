@@ -28,6 +28,7 @@ public class Product implements Serializable {
     private Integer categoryId;
     private String photosId;
     private String thumbnailUrl;
+    // private boolean isUsed = false;
 
     @ColumnInfo(defaultValue = "true")
     private Boolean active = true;

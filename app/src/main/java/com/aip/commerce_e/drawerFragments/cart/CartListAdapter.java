@@ -48,7 +48,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartVi
         holder.productId.setText("ID: "+product.getId());
         holder.productName.setText(product.getName());
         holder.productPrice.setText("$ "+product.getPrice());
-        holder.productQuantity.setText(cartProduct.getQuantity());
+        holder.productQuantity.setText(cartProduct.getQuantity().toString());
         if(product.getThumbnailUrl() != null){
             StorageReference storageReference = FirebaseStorage.getInstance().getReference()
                     .child("products/"+product.getPhotosId()+"/"+product.getThumbnailUrl());

@@ -15,6 +15,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import com.aip.commerce_e.models.CartProduct;
+import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.models.User;
 import com.aip.commerce_e.models.UserViewModel;
 import com.google.android.material.navigation.NavigationView;
@@ -89,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_product:
                     navController.navigate(R.id.productFragment);
                     break;
+                case R.id.nav_cart:
+                    navController.navigate(R.id.cartFragment);
+                    break;
                 case R.id.nav_logout:
                     FirebaseAuth.getInstance().signOut();
                     Intent intent = new Intent(this, LoginActivity.class);
@@ -118,6 +122,22 @@ public class MainActivity extends AppCompatActivity {
             sum += product.getProduct().getPrice()* product.getQuantity();
         }
         return sum;
+    }
+    public static Integer cartSize(){
+        Integer sum = 0;
+        for (CartProduct product : cart) {
+            sum += product.getQuantity();
+        }
+        return sum;
+    }
+
+    public static Integer hasProduct(Product product){
+
+        for(int i= 0; i < cart.size(); i ++){
+            if(cart.get(i).getProduct().getId().equals(product.getId()))
+                return i;
+        }
+        return -1;
     }
 
 //    @Override
