@@ -31,12 +31,14 @@ import java.util.Objects;
 
 public class ProductViewFragment extends Fragment {
     FragmentProductViewBinding binding;
+    Integer quantity;
     FirebaseStorage storage;
     StorageReference storageReference;
     Product product;
     String CHANNEL_ID = "Notification.Add";
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,6 +46,10 @@ public class ProductViewFragment extends Fragment {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         binding = FragmentProductViewBinding.inflate(inflater, container, false);
+        quantity = 1;
+        binding.productQuantity.setText(quantity.toString());
+        binding.productQuantityUp.setOnClickListener(this::increaseQuantity);
+        binding.productQuantityDown.setOnClickListener(this::decreaseQuantity);
         notificationChannel();
         return binding.getRoot();
     }
@@ -62,10 +68,10 @@ public class ProductViewFragment extends Fragment {
                 Integer pos = MainActivity.hasProduct(product);
                 if (pos >= 0){
                     Integer quant = MainActivity.cart.get(pos).getQuantity();
-                    MainActivity.cart.get(pos).setQuantity(quant+1);
+                    MainActivity.cart.get(pos).setQuantity(quant+quantity);
                     notificationAdd(product);
                 }else{
-                    MainActivity.cart.add(new CartProduct(product, 1));
+                    MainActivity.cart.add(new CartProduct(product, quantity));
                     notificationAdd(product);
                 }
                 Genson genson = new Genson();
@@ -101,6 +107,21 @@ public class ProductViewFragment extends Fragment {
         Log.i("Cantidad de fotos", String.valueOf(imageUrls.size()));*/
 
     }
+
+    @SuppressLint("SetTextI18n")
+    public void increaseQuantity(View view){
+        quantity +=1;
+        binding.productQuantity.setText(quantity.toString());
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void decreaseQuantity(View view){
+        if(quantity > 1){
+            quantity-=1;
+            binding.productQuantity.setText(quantity.toString());
+        }
+    }
+
     public void notificationChannel(){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channelCompat = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);

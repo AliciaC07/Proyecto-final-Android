@@ -21,10 +21,10 @@
               android:label="@string/home_fragment_label" tools:layout="@layout/fragment_home"/>
     <fragment android:id="@+id/createCategoryFragment"
               android:name="com.aip.commerce_e.drawerFragments.category.actions.CreateCategoryFragment"
-              tools:layout="@layout/fragment_create_category"/>
+              tools:layout="@layout/fragment_create_category" android:label="Category"/>
     <fragment android:id="@+id/createProductFragment"
               android:name="com.aip.commerce_e.drawerFragments.product.actions.CreateProductFragment"
-              tools:layout="@layout/fragment_create_product"/>
+              tools:layout="@layout/fragment_create_product" android:label="Product"/>
     <fragment android:id="@+id/productViewFragment"
               android:name="com.aip.commerce_e.drawerFragments.product.actions.ProductViewFragment"
               android:label="Product" tools:layout="@layout/fragment_product_view"/>

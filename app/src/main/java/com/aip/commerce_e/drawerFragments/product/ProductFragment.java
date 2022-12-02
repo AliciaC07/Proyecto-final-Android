@@ -69,10 +69,20 @@ public class ProductFragment extends Fragment implements RecyclerViewInterface {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // create edit/create view
-        binding.addProductFab.setOnClickListener(view1 ->
-                NavHostFragment.findNavController(ProductFragment.this)
-                        .navigate(R.id.createProductFragment));
+        CategoryViewModel categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        binding.addProductFab.setOnClickListener(view1 -> {
+            categoryViewModel.findAllActive(true).observe(getViewLifecycleOwner(), categories -> {
+                if(categories.size() > 0)
+                    NavHostFragment.findNavController(ProductFragment.this)
+                            .navigate(R.id.createProductFragment);
+                else{
+                    Toast.makeText(getContext(), "A category must exist first", Toast.LENGTH_LONG).show();
+                    NavHostFragment.findNavController(ProductFragment.this)
+                            .navigate(R.id.createCategoryFragment);
+                }
+
+            });
+        });
     }
 
     @Override

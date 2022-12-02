@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         String jsonAux = sharedPreferences.getString("ecommerce","");
         if(!jsonAux.equalsIgnoreCase("[]")) {
             cart = genson.deserialize(jsonAux, new GenericType<List<CartProduct>>(){});
-            Log.i("cart", jsonAux);
         }
         else
             cart = new ArrayList<>();
