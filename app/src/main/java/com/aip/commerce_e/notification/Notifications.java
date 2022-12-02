@@ -11,5 +11,5 @@ public class Notifications {
     private String title;
     private String content;
     private String app;
-
+    private String type;
 }

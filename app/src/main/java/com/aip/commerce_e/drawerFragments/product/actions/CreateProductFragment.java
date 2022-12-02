@@ -133,13 +133,16 @@ public class CreateProductFragment extends Fragment {
         });
         binding.btnRegisterProduct.setOnClickListener(view -> {
             if(isEdit){
-                if (validForm())
+                if (validForm()){
+                    Toast.makeText(getContext(), "Updating Product", Toast.LENGTH_SHORT).show();
                     updateProduct();
+                }
                 else
                     Toast.makeText(getContext(), "All fields must be filled", Toast.LENGTH_SHORT).show();
             }else {
                 // for each image upload file
                 if(validForm() && validateImg()){
+                    Toast.makeText(getContext(), "Registering Product", Toast.LENGTH_SHORT).show();
                     String uuid = UUID.randomUUID().toString();
                     for(int i = 0; i < imageUris.size(); i ++){
                         uploadFile(uuid, imageUris.get(i),i == imageUris.size()-1, i == 0);
