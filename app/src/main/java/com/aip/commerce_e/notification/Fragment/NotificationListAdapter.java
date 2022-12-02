@@ -1,5 +1,6 @@
 package com.aip.commerce_e.notification.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.aip.commerce_e.notification.Notifications;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -31,10 +33,10 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     @Override
     public void onBindViewHolder(@NonNull @NotNull NotificationViewHolder holder, int position) {
         Notifications notification = notifications.get(position);
+
         holder.contentTxt.setText(notification.getContent());
         holder.appTxt.setText(notification.getApp());
         holder.titleTxt.setText(notification.getTitle());
-        holder.timeTxt.setText(notification.getTime());
     }
 
     @Override
@@ -54,7 +56,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         LinearLayout card;
         public NotificationViewHolder(@NonNull @NotNull View itemView, NotificationInterface notificationInterface) {
             super(itemView);
-            timeTxt = itemView.findViewById(R.id.notification_time);
             appTxt = itemView.findViewById(R.id.notification_app);
             titleTxt = itemView.findViewById(R.id.notification_title);
             contentTxt = itemView.findViewById(R.id.notification_content);

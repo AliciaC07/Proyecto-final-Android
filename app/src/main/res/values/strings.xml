@@ -19,6 +19,7 @@
     <string name="byProduct">By product</string>
     <string name="searchProduct">Search Products</string>
     <string name="searchCategory">Search Categories</string>
+    <string name="notificationLabel">Notifications</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>

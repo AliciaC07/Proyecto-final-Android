@@ -26,10 +26,12 @@ import com.aip.commerce_e.models.CartProduct;
 import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.models.ProductViewModel;
 import com.aip.commerce_e.notification.NotificationCreate;
+import com.aip.commerce_e.notification.Notifications;
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -149,5 +151,8 @@ public class CartFragment extends Fragment implements CartRCVInterface {
     public void notificationAdd(){
         NotificationCreate notificationCreate = new NotificationCreate("Purchase made", "The purchase was completed. Your total: "+MainActivity.subTotal() +" $");
         notificationCreate.notificationAdd(binding.getRoot().getContext(), CHANNEL_ID);
+        Notifications notifications = new Notifications("Purchase made", "The purchase was completed. Your total: "+MainActivity.subTotal() +" $",
+                "commerce-e", "Cart");
+        MainActivity.notifications.add(notifications);
     }
 }
