@@ -34,4 +34,7 @@
               android:label="@string/searchCategory" tools:layout="@layout/fragment_search_category"/>
     <fragment android:id="@+id/cartFragment" android:name="com.aip.commerce_e.drawerFragments.cart.CartFragment"
               android:label="Cart" tools:layout="@layout/fragment_cart"/>
+    <fragment android:id="@+id/notificationFragment"
+              android:name="com.aip.commerce_e.notification.Fragment.NotificationFragment"
+              android:label="@string/notificationLabel" tools:layout="@layout/fragment_notification"/>
 </navigation>

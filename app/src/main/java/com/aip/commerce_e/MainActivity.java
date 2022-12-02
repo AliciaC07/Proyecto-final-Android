@@ -21,6 +21,7 @@ import com.aip.commerce_e.models.CartProduct;
 import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.models.User;
 import com.aip.commerce_e.models.UserViewModel;
+import com.aip.commerce_e.notification.Notifications;
 import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private  String email = "12345@gmail.com";
     public static User userLogged;
     public static List<CartProduct> cart;
+    public static List<Notifications> notifications = new ArrayList<>();
     private FirebaseAuth mAuth;
 
     @SuppressLint({"ResourceType", "NonConstantResourceId"})
@@ -68,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getBaseContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
         jsonAux = sharedPreferences.getString("ecommerce","");
-        Log.i("El carrito",jsonAux);
         if(!jsonAux.equalsIgnoreCase("[]") && !jsonAux.equalsIgnoreCase("")) {
             cart = genson.deserialize(jsonAux, new GenericType<List<CartProduct>>(){});
         }
@@ -221,7 +222,8 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.show();
                 break;
             case R.id.notifications:
-                Toast.makeText(binding.getRoot().getContext(), "Notifications touched", Toast.LENGTH_SHORT).show();
+                navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+                navController.navigate(R.id.notificationFragment);
                 break;
             case R.id.cart:
                 navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);

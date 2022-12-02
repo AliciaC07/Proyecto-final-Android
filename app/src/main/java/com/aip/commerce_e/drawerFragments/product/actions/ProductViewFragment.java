@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,12 +20,15 @@ import com.aip.commerce_e.databinding.FragmentProductViewBinding;
 import com.aip.commerce_e.models.CartProduct;
 import com.aip.commerce_e.models.Product;
 import com.aip.commerce_e.notification.NotificationCreate;
+import com.aip.commerce_e.notification.Notifications;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
 import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
 import org.jetbrains.annotations.NotNull;
+
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -134,5 +138,9 @@ public class ProductViewFragment extends Fragment {
     public void notificationAdd(Product product){
         NotificationCreate notificationCreate = new NotificationCreate("Product added to cart", "Product "+ product.getName()+" added to cart");
         notificationCreate.notificationAdd(binding.getRoot().getContext(), CHANNEL_ID);
+
+        Notifications notifications = new Notifications("Product added to cart", "Product "+ product.getName()+" added to cart",
+                "commerce-e", "Add");
+        MainActivity.notifications.add(notifications);
     }
 }
