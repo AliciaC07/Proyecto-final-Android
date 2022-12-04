@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private  String email = "12345@gmail.com";
     public static User userLogged;
     public static List<CartProduct> cart;
-    public static List<Notifications> notifications = new ArrayList<>();
+    public static List<Notifications> notifications;
     private FirebaseAuth mAuth;
 
     @SuppressLint({"ResourceType", "NonConstantResourceId"})
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
             cart = new ArrayList<>();
+        notifications = new ArrayList<>();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         mAuth = FirebaseAuth.getInstance();
         email = mAuth.getCurrentUser().getEmail();
