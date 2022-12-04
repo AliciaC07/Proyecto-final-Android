@@ -32,7 +32,6 @@ public class NotificationFragment extends Fragment implements NotificationInterf
         binding.notificationRcv.setLayoutManager(new LinearLayoutManager(binding.getRoot().getContext()));
         binding.notificationRcv.setAdapter(notificationListAdapter);
 
-
         return binding.getRoot();
     }
 
