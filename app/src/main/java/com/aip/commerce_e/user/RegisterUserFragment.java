@@ -1,7 +1,8 @@
-package com.aip.commerce_e;
+package com.aip.commerce_e.user;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,24 +19,28 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
+import com.aip.commerce_e.MainActivity;
+import com.aip.commerce_e.R;
 import com.aip.commerce_e.databinding.FragmentRegisterUserBinding;
 import com.aip.commerce_e.models.User;
 import com.aip.commerce_e.models.UserViewModel;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -55,6 +60,7 @@ public class RegisterUserFragment extends Fragment {
     private StorageTask UploadTask;
     private StorageReference ref;
     private StorageReference storageReference;
+    public ProgressDialog progress;
 
 
     public RegisterUserFragment() {
@@ -82,6 +88,7 @@ public class RegisterUserFragment extends Fragment {
         storageReference = FirebaseStorage.getInstance().getReference();
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mAuth = FirebaseAuth.getInstance();
+        progress = new ProgressDialog(binding.getRoot().getContext());
 
 ///https://stackoverflow.com/questions/4152780/mask-an-edittext-with-phone-number-format-nan-like-in-phonenumberutils
         binding.phoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
@@ -108,6 +115,10 @@ public class RegisterUserFragment extends Fragment {
 
         binding.btnRegisterUser.setOnClickListener(view -> {
             if (validate() && validatePass()){
+                progress.setTitle("Registering");
+                progress.setMessage("Please Wait ");
+                progress.setCanceledOnTouchOutside(false);
+                progress.show();
                 registerFirebase();
             }
 
@@ -120,6 +131,7 @@ public class RegisterUserFragment extends Fragment {
         mAuth.createUserWithEmailAndPassword(binding.emailtxt.getText().toString(), binding.passConfirm2.getText().toString())
                 .addOnCompleteListener((Activity) binding.getRoot().getContext(), task -> {
                     if (task.isSuccessful()) {
+//                        progress.dismiss();
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("TAG", "createUserWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
@@ -128,6 +140,7 @@ public class RegisterUserFragment extends Fragment {
                         uploadFile(user.getUid());
 
                     } else {
+                        //progress.hide();
                         // If sign in fails, display a message to the user.
                         Log.w("TAG", "createUserWithEmail:failure", task.getException());
                         Toast.makeText(binding.getRoot().getContext(), task.getException().getMessage(),
@@ -229,17 +242,23 @@ public class RegisterUserFragment extends Fragment {
                         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+                                progress.dismiss();
                                 insertUser(uri.toString(), uuid);
                             }
                         });
                         ///Toast.makeText(binding.getRoot().getContext(), "Upload successful", Toast.LENGTH_LONG).show();
                     })
-                    .addOnFailureListener(e -> Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> {
+                        progress.hide();
+                        Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    })
                     .addOnProgressListener(taskSnapshot -> {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                         binding.progressBar2.setProgress((int) progress);
                     });
         } else {
+            progress.hide();
             Toast.makeText(binding.getRoot().getContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
     }

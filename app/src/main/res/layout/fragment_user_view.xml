@@ -5,14 +5,14 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".user.RegisterUserFragment" android:background="#424555">
+        tools:context=".user.UserViewFragment" android:background="#424555">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <ImageView
                 android:layout_width="338dp"
                 android:layout_height="182dp" tools:srcCompat="@tools:sample/avatars"
-                android:id="@+id/imageView2"
+                android:id="@+id/imageView3"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="28dp"
                 android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
@@ -23,31 +23,31 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
-                android:id="@+id/userNametxt"
+                android:id="@+id/userNametxtView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" android:hint="@string/enterName"
                 android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:textColor="#FFFFFF"
-                android:minHeight="48dp" app:layout_constraintTop_toBottomOf="@+id/progressBar2"
-                android:layout_marginTop="16dp"/>
+                android:minHeight="48dp"
+                android:layout_marginTop="38dp" app:layout_constraintTop_toBottomOf="@+id/imageView3"/>
         <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
-                android:id="@+id/lastNametxt"
+                android:id="@+id/lastNametxtView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" android:hint="@string/enterLastname"
                 android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:textColor="#FFFFFF"
                 android:minHeight="48dp"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintTop_toBottomOf="@+id/userNametxt" android:layout_marginTop="16dp"/>
+                app:layout_constraintTop_toBottomOf="@+id/userNametxtView" android:layout_marginTop="16dp"/>
         <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:ems="10"
-                android:id="@+id/emailtxt"
-                app:layout_constraintTop_toBottomOf="@+id/lastNametxt" app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/emailtxtView"
+                app:layout_constraintTop_toBottomOf="@+id/lastNametxtView" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp" android:layout_marginTop="16dp" android:minHeight="48dp"
                 android:hint="@string/enterEmail"/>
@@ -56,53 +56,53 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
-                android:id="@+id/passConfirm1"
-                app:layout_constraintTop_toBottomOf="@+id/emailtxt"
-                android:layout_marginTop="16dp" app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/passConfirm1View"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" android:minHeight="48dp" android:hint="@string/enterPass1"/>
+                android:layout_marginEnd="16dp" android:minHeight="48dp" android:hint="@string/enterPass1"
+                app:layout_constraintTop_toBottomOf="@+id/swPassword" android:layout_marginTop="8dp"/>
         <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
-                android:id="@+id/passConfirm2"
-                app:layout_constraintTop_toBottomOf="@+id/passConfirm1"
+                android:id="@+id/passConfirm2View"
+                app:layout_constraintTop_toBottomOf="@+id/passConfirm1View"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="16dp" android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
                 android:hint="@string/enterPass2" android:minHeight="48dp"/>
-        <Button
-                android:text="@string/register"
-                android:layout_width="wrap_content"
-                android:layout_height="55dp" android:id="@+id/btnRegisterUser"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" android:textColor="#FFFFFF"
-                app:layout_constraintTop_toBottomOf="@+id/spnRoles" android:layout_marginTop="16dp"/>
-        <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="338dp"
-                android:layout_height="22dp"
-                android:id="@+id/progressBar2"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" app:layout_constraintHorizontal_bias="0.479"/>
         <Spinner
                 android:layout_width="0dp"
-                android:layout_height="48dp" android:id="@+id/spnRoles"
+                android:layout_height="48dp" android:id="@+id/spnRolesView"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent"
-                android:entries="@array/roles" app:layout_constraintTop_toBottomOf="@+id/phoneNumber"
+                android:entries="@array/roles" app:layout_constraintTop_toBottomOf="@+id/passConfirm2View"
                 android:layout_marginTop="16dp"/>
+        <Button
+                android:text="@string/editUser"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp" android:id="@+id/btnEditUser"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" android:textColor="#FFFFFF"
+                app:layout_constraintTop_toBottomOf="@+id/spnRolesView" android:layout_marginTop="16dp"/>
         <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:ems="10"
-                android:id="@+id/phoneNumber"
-                app:layout_constraintTop_toBottomOf="@+id/passConfirm2" app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/phoneNumberview"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" android:layout_marginTop="16dp" android:minHeight="48dp"
-                android:hint="@string/phone" android:maxLength="14"/>
+                android:layout_marginEnd="16dp" android:minHeight="48dp"
+                android:hint="@string/phone" android:maxLength="14"
+                app:layout_constraintTop_toBottomOf="@+id/emailtxtView" android:layout_marginTop="16dp"/>
+        <Switch
+                android:text="@string/swChangePass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/swPassword"
+                app:layout_constraintTop_toBottomOf="@+id/phoneNumberview"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp" app:layout_constraintHorizontal_bias="0.049" android:minHeight="48dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -20,6 +20,10 @@
     <string name="searchProduct">Search Products</string>
     <string name="searchCategory">Search Categories</string>
     <string name="notificationLabel">Notifications</string>
+    <string name="editUser">Edit</string>
+    <string name="viewUserLabel">Profile</string>
+    <string name="forgotPass">Forgot password</string>
+    <string name="swChangePass">Check to change password</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>

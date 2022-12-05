@@ -37,4 +37,6 @@
     <fragment android:id="@+id/notificationFragment"
               android:name="com.aip.commerce_e.notification.Fragment.NotificationFragment"
               android:label="@string/notificationLabel" tools:layout="@layout/fragment_notification"/>
+    <fragment android:id="@+id/userViewFragment" android:name="com.aip.commerce_e.user.UserViewFragment"
+              android:label="@string/viewUserLabel" tools:layout="@layout/fragment_user_view"/>
 </navigation>

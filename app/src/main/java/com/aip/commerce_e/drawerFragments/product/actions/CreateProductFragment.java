@@ -2,6 +2,7 @@ package com.aip.commerce_e.drawerFragments.product.actions;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -65,6 +67,7 @@ public class CreateProductFragment extends Fragment {
     StorageReference storageReference;
     StorageReference ref;
     private boolean isEdit = false;
+    private ProgressDialog progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,7 @@ public class CreateProductFragment extends Fragment {
         binding = FragmentCreateProductBinding.inflate(inflater,container,false);
         categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
         productViewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
+        progress = new ProgressDialog(binding.getRoot().getContext());
         categoryViewModel.findAllActive(true).observe(getViewLifecycleOwner(),
                 categories -> {
                     ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<Category>(getContext(), android.R.layout.simple_spinner_item, categories);
@@ -132,17 +136,29 @@ public class CreateProductFragment extends Fragment {
             popup.show();
         });
         binding.btnRegisterProduct.setOnClickListener(view -> {
+            Handler handler = new Handler();
             if(isEdit){
-                if (validForm()){
-                    Toast.makeText(getContext(), "Updating Product", Toast.LENGTH_SHORT).show();
-                    updateProduct();
-                }
-                else
-                    Toast.makeText(getContext(), "All fields must be filled", Toast.LENGTH_SHORT).show();
+                progress.setTitle("Updating");
+                progress.setMessage("Please Wait ");
+                progress.setCanceledOnTouchOutside(false);
+                progress.show();
+                handler.postDelayed(()-> {
+                    progress.dismiss();
+                    if (validForm()){
+                        //Toast.makeText(getContext(), "Updating Product", Toast.LENGTH_SHORT).show();
+                        updateProduct();
+                    }
+                    else
+                        Toast.makeText(getContext(), "All fields must be filled", Toast.LENGTH_SHORT).show();
+                },2000);
             }else {
+                progress.setTitle("Registering Product");
+                progress.setMessage("Please Wait ");
+                progress.setCanceledOnTouchOutside(false);
+                progress.show();
                 // for each image upload file
                 if(validForm() && validateImg()){
-                    Toast.makeText(getContext(), "Registering Product", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getContext(), "Registering Product", Toast.LENGTH_SHORT).show();
                     String uuid = UUID.randomUUID().toString();
                     for(int i = 0; i < imageUris.size(); i ++){
                         uploadFile(uuid, imageUris.get(i),i == imageUris.size()-1, i == 0);
@@ -250,6 +266,7 @@ public class CreateProductFragment extends Fragment {
             if(isFirst)
                 thumbnail = imgUuid;
             StorageTask<com.google.firebase.storage.UploadTask.TaskSnapshot> uploadTask = myref.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                progress.dismiss();
 //                        Handler handler = new Handler();
 //                        handler.postDelayed(() -> binding.categoryProgressBar.setProgress(0), 500);
                         if(isLast)
@@ -257,7 +274,9 @@ public class CreateProductFragment extends Fragment {
                             //ref.getDownloadUrl().addOnSuccessListener(uri -> insertCategory(uri.toString(), uuid));
                         ///Toast.makeText(binding.getRoot().getContext(), "Upload successful", Toast.LENGTH_LONG).show();
                     })
-                    .addOnFailureListener(e -> Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> {Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        progress.hide();
+                    });
 //                    .addOnProgressListener(taskSnapshot -> {
 //                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
 //                        binding.categoryProgressBar.setProgress((int) progress);

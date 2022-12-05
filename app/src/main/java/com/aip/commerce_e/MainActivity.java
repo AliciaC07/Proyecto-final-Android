@@ -124,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                     break;
+                case R.id.nav_profile:
+                    navController.navigate(R.id.userViewFragment);
+                    break;
             }
             if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
