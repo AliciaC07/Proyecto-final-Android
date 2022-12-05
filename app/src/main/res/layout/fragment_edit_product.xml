@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".drawerFragments.product.actions.CreateProductFragment"
+             android:background="#424555">
+    <androidx.appcompat.widget.LinearLayoutCompat
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <!-- Here goes multiple image uploader -->
+        <org.imaginativeworld.whynotimagecarousel.ImageCarousel
+                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="199dp"
+                android:id="@+id/product_image_picker"/>
+        <TextView
+                android:id="@+id/image_warning"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:text="The first element selected will become the product thumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        <EditText
+                android:hint="@string/enter_product_name"
+                android:textColor="#FFFFFF"
+                android:layout_marginHorizontal="16dp"
+                android:id="@+id/product_name_txt"
+                android:inputType="textPersonName"
+                android:layout_marginVertical="20dp"
+                android:ems="10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        <EditText
+                android:hint="Product price"
+                android:layout_marginVertical="20dp"
+                android:id="@+id/product_price_txt"
+                android:layout_marginHorizontal="16dp"
+                android:inputType="numberDecimal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        <EditText
+                android:hint="Product description"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:gravity="start|top"
+                android:ems="10"
+                android:id="@+id/product_description_txt"/>
+        <Spinner
+                android:layout_marginVertical="16dp"
+                android:layout_marginHorizontal="20dp"
+                android:id="@+id/product_category_spn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        <Button
+                android:text="@string/register"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:id="@+id/btn_register_product"
+                android:textColor="#FFFFFF"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</FrameLayout>
