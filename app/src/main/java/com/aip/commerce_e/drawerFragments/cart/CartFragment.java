@@ -3,10 +3,12 @@ package com.aip.commerce_e.drawerFragments.cart;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationChannelCompat;
@@ -43,6 +45,7 @@ public class CartFragment extends Fragment implements CartRCVInterface {
     ProductViewModel productViewModel;
 
     String CHANNEL_ID = "Notification.cart";
+    private ProgressDialog progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,7 @@ public class CartFragment extends Fragment implements CartRCVInterface {
                              Bundle savedInstanceState) {
         binding = FragmentCartBinding.inflate(inflater, container, false);
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
-
+        progress = new ProgressDialog(binding.getRoot().getContext());
         genson = new Genson();
 
         cartListAdapter = new CartListAdapter(null, this);
@@ -73,23 +76,32 @@ public class CartFragment extends Fragment implements CartRCVInterface {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.checkoutBtn.setOnClickListener(view1 -> {
-            for (CartProduct product: MainActivity.cart) {
-                Product product1 = product.getProduct();
-                product1.setUsed(true);
-                productViewModel.update(product1);
-            }
-            notificationAdd();
-            MainActivity.cart = new ArrayList<>();
+            progress.setTitle("Processing purchase");
+            progress.setMessage("Please Wait ");
+            progress.setCanceledOnTouchOutside(false);
+            progress.show();
+            Handler handler = new Handler();
+            handler.postDelayed(()->{
+                progress.dismiss();
+                for (CartProduct product: MainActivity.cart) {
+                    Product product1 = product.getProduct();
+                    product1.setUsed(true);
+                    productViewModel.update(product1);
+                }
+                notificationAdd();
+                MainActivity.cart = new ArrayList<>();
+                Genson genson = new Genson();
+                SharedPreferences sharedPreferences = requireContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String jsonAux = genson.serialize(MainActivity.cart, GenericType.of(List.class));
+                editor.putString("ecommerce", jsonAux).apply();
+
+                NavHostFragment.findNavController(CartFragment.this)
+                        .navigate(R.id.homeFragment3);
+            }, 3000);
             Toast.makeText(this.getContext(), "Thank you for your purchase", Toast.LENGTH_LONG).show();
 
-            Genson genson = new Genson();
-            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("ecommerce", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            String jsonAux = genson.serialize(MainActivity.cart, GenericType.of(List.class));
-            editor.putString("ecommerce", jsonAux).apply();
 
-            NavHostFragment.findNavController(CartFragment.this)
-                    .navigate(R.id.homeFragment3);
         });
     }
     @SuppressLint("SetTextI18n")

@@ -3,6 +3,7 @@ package com.aip.commerce_e.drawerFragments.category.actions;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -59,6 +60,7 @@ public class CreateCategoryFragment extends Fragment {
     StorageReference storageReference;
     StorageReference ref;
     private boolean isEdit = false;
+    private ProgressDialog progress;
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -67,7 +69,7 @@ public class CreateCategoryFragment extends Fragment {
         binding = FragmentCreateCategoryBinding.inflate(inflater, container, false);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
+        progress = new ProgressDialog(binding.getRoot().getContext());
         categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
         if(getArguments() != null){
             isEdit = true;
@@ -103,16 +105,28 @@ public class CreateCategoryFragment extends Fragment {
         });
 
         binding.btnRegisterCategory.setOnClickListener(view -> {
+            Handler handler = new Handler();
             if(!isEdit){
+                progress.setTitle("Registering");
+                progress.setMessage("Please Wait ");
+                progress.setCanceledOnTouchOutside(false);
+                progress.show();
                 if(validate() && validateImage()){
-                    Toast.makeText(getContext(), "Registering category", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Registering category", Toast.LENGTH_SHORT).show();
                     uploadFile(UUID.randomUUID().toString());
                 }
             }else{
-                if(validate() && aux.getImageUrl()!=null){
-                    Toast.makeText(getContext(), "Updating category", Toast.LENGTH_SHORT).show();
-                    updateFile(aux.getUIdFirebase());
-                }
+                progress.setTitle("Updating");
+                progress.setMessage("Please Wait ");
+                progress.setCanceledOnTouchOutside(false);
+                progress.show();
+                handler.postDelayed(()-> {
+                    progress.dismiss();
+                    if(validate() && aux.getImageUrl()!=null){
+                        //Toast.makeText(getContext(), "Updating category", Toast.LENGTH_SHORT).show();
+                        updateFile(aux.getUIdFirebase());
+                    }
+                },2000);
             }
         });
         return binding.getRoot();
@@ -173,12 +187,15 @@ public class CreateCategoryFragment extends Fragment {
             ref = storageReference.child("categories/" + uuid);
 
             UploadTask = ref.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                progress.dismiss();
 //                        Handler handler = new Handler();
 //                        handler.postDelayed(() -> binding.categoryProgressBar.setProgress(0), 500);
                         ref.getDownloadUrl().addOnSuccessListener(uri -> insertCategory(uri.toString(), uuid));
                         ///Toast.makeText(binding.getRoot().getContext(), "Upload successful", Toast.LENGTH_LONG).show();
                     })
-                    .addOnFailureListener(e -> Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> {Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        progress.hide();
+                    });
 //                    .addOnProgressListener(taskSnapshot -> {
 //                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
 //                        binding.categoryProgressBar.setProgress((int) progress);
@@ -199,7 +216,10 @@ public class CreateCategoryFragment extends Fragment {
                         ref.getDownloadUrl().addOnSuccessListener(uri -> updateCategory(uri.toString(), uuid));
                         ///Toast.makeText(binding.getRoot().getContext(), "Upload successful", Toast.LENGTH_LONG).show();
                     })
-                    .addOnFailureListener(e -> Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        progress.hide();
+                    });
 //                    .addOnProgressListener(taskSnapshot -> {
 //                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
 //                        binding.categoryProgressBar.setProgress((int) progress);
