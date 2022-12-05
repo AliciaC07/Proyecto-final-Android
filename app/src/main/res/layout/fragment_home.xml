@@ -4,12 +4,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".drawerFragments.home.HomeFragment">
-
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Home fragment" android:textSize="70sp" android:background="#424555"
-            android:textColor="@color/white"/>
+        tools:context=".drawerFragments.home.HomeFragment" android:background="#424555">
 
 </FrameLayout>
